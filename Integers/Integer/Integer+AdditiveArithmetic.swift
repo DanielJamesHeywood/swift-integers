@@ -7,7 +7,7 @@ extension Integer: AdditiveArithmetic {
     }
     
     @inlinable
-    public static func - (lhs: Integer, rhs: Integer) -> Integer {
+    public static func + (lhs: Integer, rhs: Integer) -> Integer {
         fatalError()
     }
     
@@ -16,7 +16,7 @@ extension Integer: AdditiveArithmetic {
     }
     
     @inlinable
-    public static func + (lhs: Integer, rhs: Integer) -> Integer {
+    public static func - (lhs: Integer, rhs: Integer) -> Integer {
         fatalError()
     }
     
