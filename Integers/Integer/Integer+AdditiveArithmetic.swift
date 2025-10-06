@@ -11,7 +11,7 @@ extension Integer: AdditiveArithmetic {
         fatalError()
     }
     
-    public static func += (lhs: inout Self, rhs: Self) {
+    public static func += (lhs: inout Integer, rhs: Integer) {
         fatalError()
     }
     
@@ -20,7 +20,7 @@ extension Integer: AdditiveArithmetic {
         fatalError()
     }
     
-    public static func -= (lhs: inout Self, rhs: Self) {
+    public static func -= (lhs: inout Integer, rhs: Integer) {
         fatalError()
     }
 }
