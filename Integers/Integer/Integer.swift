@@ -1,0 +1,3 @@
+
+@frozen
+public struct Integer {}
