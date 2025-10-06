@@ -1,3 +1,7 @@
 
 @frozen
-public struct Integer {}
+public struct Integer {
+    
+    @usableFromInline
+    internal var _words: [UInt]
+}
