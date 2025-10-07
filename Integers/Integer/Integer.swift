@@ -7,7 +7,7 @@ public struct Integer {
     
     @inlinable
     internal init(_words: [UInt]) {
-        fatalError()
+        self._words = _words
     }
 }
 
