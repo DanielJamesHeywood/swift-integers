@@ -55,8 +55,9 @@ extension Integer {
     
     @inlinable
     internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
-        guard _words.count == other._words.count else {
-            return _words.count < other._words.count ? .lessThan : .greaterThan
+        let wordCount = _words.count, otherWordCount = other._words.count
+        guard wordCount == otherWordCount else {
+            return wordCount < otherWordCount ? .lessThan : .greaterThan
         }
         for index in _words.indices.reversed() {
             let word = _words[index], otherWord = other._words[index]
