@@ -45,7 +45,14 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public var trailingZeroBitCount: Int {
-        fatalError()
+        guard let index = _words.firstIndex(
+            where: { word in
+                return word != 0
+            }
+        ) else {
+            return UInt.bitWidth
+        }
+        return index * UInt.bitWidth + _words[index].trailingZeroBitCount
     }
     
     @inlinable
