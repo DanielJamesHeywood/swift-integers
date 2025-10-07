@@ -23,12 +23,12 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init<T: BinaryInteger>(truncatingIfNeeded source: T) {
-        fatalError()
+        self.init(source)
     }
     
     @inlinable
     public init<T: BinaryInteger>(clamping source: T) {
-        fatalError()
+        self.init(source)
     }
     
     public typealias Words = [UInt]

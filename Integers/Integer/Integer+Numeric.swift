@@ -3,7 +3,7 @@ extension Integer: Numeric {
     
     @inlinable
     public init?<T: BinaryInteger>(exactly source: T) {
-        fatalError()
+        self.init(source)
     }
     
     public typealias Magnitude = Integer
