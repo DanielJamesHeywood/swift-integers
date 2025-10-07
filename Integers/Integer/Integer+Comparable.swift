@@ -59,8 +59,7 @@ extension Integer {
             return _words.count < other._words.count ? .lessThan : .greaterThan
         }
         for index in _words.indices.reversed() {
-            let word = _words[index]
-            let otherWord = other._words[index]
+            let word = _words[index], otherWord = other._words[index]
             guard word == otherWord else {
                 return word < otherWord ? .lessThan : .greaterThan
             }
