@@ -172,6 +172,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func signum() -> Integer {
-        return _isNegative ? -1 : 1
+        switch _compare(to: 0) {
+        case .lessThan:
+            return -1
+        case .greaterThan:
+            return 1
+        case .equalTo:
+            return 0
+        }
     }
 }
