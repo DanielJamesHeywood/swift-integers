@@ -10,6 +10,6 @@ extension Integer: Numeric {
     
     @inlinable
     public var magnitude: Integer {
-        fatalError()
+        return _isNegative ? -self : self
     }
 }
