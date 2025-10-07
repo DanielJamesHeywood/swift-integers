@@ -24,7 +24,7 @@ extension Integer: SignedNumeric {
                         buffer.initializeElement(at: index, to: partialValue)
                     }
                     if overflow {
-                        buffer.initializeElement(at: words.count, to: 0 &- 1)
+                        buffer.initializeElement(at: words.count, to: 0)
                         initializedCount = words.count + 1
                     } else {
                         initializedCount = words.count
@@ -51,7 +51,7 @@ extension Integer: SignedNumeric {
             _words[index] = partialValue
         }
         if overflow {
-            _words.append(0 &- 1)
+            _words.append(0)
         }
     }
 }
