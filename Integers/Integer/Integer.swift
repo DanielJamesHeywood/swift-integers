@@ -8,6 +8,12 @@ public struct Integer {
     @inlinable
     internal init(_words: [UInt]) {
         self._words = _words
+        _standardize()
+    }
+    
+    @inlinable
+    internal func _standardize() {
+        fatalError()
     }
 }
 
