@@ -12,14 +12,4 @@ extension Integer: Numeric {
     public var magnitude: Integer {
         fatalError()
     }
-    
-    @inlinable
-    public static func * (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
-    }
-    
-    @inlinable
-    public static func *= (lhs: inout Integer, rhs: Integer) {
-        fatalError()
-    }
 }

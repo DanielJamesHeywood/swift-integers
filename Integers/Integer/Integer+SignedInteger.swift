@@ -1,0 +1,2 @@
+
+extension Integer: SignedInteger {}
