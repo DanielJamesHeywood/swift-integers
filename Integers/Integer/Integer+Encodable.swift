@@ -3,6 +3,7 @@ extension Integer: Encodable {
     
     @inlinable
     public func encode(to encoder: any Encoder) throws {
-        fatalError()
+        var container = encoder.singleValueContainer()
+        try container.encode(_words)
     }
 }
