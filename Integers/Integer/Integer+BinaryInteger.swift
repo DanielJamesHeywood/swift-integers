@@ -172,6 +172,6 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func signum() -> Integer {
-        fatalError()
+        return _isNegative ? -1 : 1
     }
 }
