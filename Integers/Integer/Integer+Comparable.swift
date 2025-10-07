@@ -68,11 +68,3 @@ extension Integer {
         return .equalTo
     }
 }
-
-extension Integer {
-    
-    @inlinable
-    internal var _isNegative: Bool {
-        return _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0
-    }
-}
