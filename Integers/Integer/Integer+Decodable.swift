@@ -3,6 +3,6 @@ extension Integer: Decodable {
     
     @inlinable
     public init(from decoder: any Decoder) throws {
-        fatalError()
+        self.init(_words: try decoder.singleValueContainer().decode([UInt].self))
     }
 }
