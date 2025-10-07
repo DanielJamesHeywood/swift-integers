@@ -36,22 +36,22 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public mutating func negate() {
-        var (partialValue, overflow) = (0 as UInt, false)
+        var (partialValue, overflow) = (UInt.min, false)
         for index in _words.indices {
             if overflow {
-                (partialValue, overflow) = (0 as UInt).subtractingReportingOverflow(_words[index])
+                (partialValue, overflow) = UInt.min.subtractingReportingOverflow(_words[index])
                 if overflow {
                     partialValue &-= 1
                 } else {
                     (partialValue, overflow) = partialValue.subtractingReportingOverflow(1)
                 }
             } else {
-                (partialValue, overflow) = (0 as UInt).subtractingReportingOverflow(_words[index])
+                (partialValue, overflow) = UInt.min.subtractingReportingOverflow(_words[index])
             }
             _words[index] = partialValue
         }
         if overflow {
-            _words.append(0)
+            _words.append(UInt.min)
         }
     }
 }
