@@ -5,11 +5,11 @@ extension Integer: Strideable {
     
     @inlinable
     public func distance(to other: Integer) -> Integer {
-        fatalError()
+        return other - self
     }
     
     @inlinable
     public func advanced(by n: Integer) -> Integer {
-        fatalError()
+        return self + n
     }
 }
