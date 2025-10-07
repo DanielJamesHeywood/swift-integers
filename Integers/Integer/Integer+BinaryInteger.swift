@@ -35,7 +35,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public var words: [UInt] {
-        fatalError()
+        return _words
     }
     
     @inlinable
