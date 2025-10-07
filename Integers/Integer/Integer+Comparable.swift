@@ -34,7 +34,36 @@ extension Integer {
     
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
-        fatalError()
+        switch (_isNegative, other._isNegative) {
+        case (false, false):
+            return _compareMagnitude(to: other)
+        case (false, true):
+            return .greaterThan
+        case (true, false):
+            return .lessThan
+        case (true, true):
+            switch _compareMagnitude(to: other) {
+            case .lessThan:
+                return .greaterThan
+            case .greaterThan:
+                return .lessThan
+            case .equalTo:
+                return .equalTo
+            }
+        }
+    }
+    
+    @inlinable
+    internal func _compareMagnitude(to other: Integer) -> _ComparisonResult {
+        guard _words.count == other._words.count else {
+            return _words.count < other._words.count ? .lessThan : .greaterThan
+        }
+        for (lhWord, rhWord) in zip(_words.reversed(), other._words.reversed()) {
+            guard lhWord == rhWord else {
+                return lhWord < rhWord ? .lessThan : .greaterThan
+            }
+        }
+        return .equalTo
     }
 }
 
