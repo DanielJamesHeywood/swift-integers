@@ -51,7 +51,9 @@ extension Integer: SignedNumeric {
             _words[index] = partialValue
         }
         if overflow {
+            _words.reserveCapacity(_words.count + 1)
             _words.append(UInt.min)
         }
+        _standardize()
     }
 }
