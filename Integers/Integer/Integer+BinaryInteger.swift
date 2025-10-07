@@ -40,7 +40,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public var bitWidth: Int {
-        fatalError()
+        return _words.count * UInt.bitWidth
     }
     
     @inlinable
