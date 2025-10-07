@@ -3,7 +3,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static var isSigned: Bool {
-        fatalError()
+        return true
     }
     
     @inlinable
