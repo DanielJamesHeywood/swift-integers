@@ -4,6 +4,11 @@ public struct Integer {
     
     @usableFromInline
     internal var _words: [UInt]
+    
+    @inlinable
+    internal init(_words: [UInt]) {
+        fatalError()
+    }
 }
 
 extension Integer {
