@@ -7,27 +7,27 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public init?<T>(exactly source: T) where T : BinaryFloatingPoint {
+    public init?<T: BinaryFloatingPoint>(exactly source: T) {
         fatalError()
     }
     
     @inlinable
-    public init<T>(_ source: T) where T : BinaryFloatingPoint {
+    public init<T: BinaryFloatingPoint>(_ source: T) {
         fatalError()
     }
     
     @inlinable
-    public init<T>(_ source: T) where T : BinaryInteger {
+    public init<T: BinaryInteger>(_ source: T) {
         fatalError()
     }
     
     @inlinable
-    public init<T>(truncatingIfNeeded source: T) where T : BinaryInteger {
+    public init<T: BinaryInteger>(truncatingIfNeeded source: T) {
         fatalError()
     }
     
     @inlinable
-    public init<T>(clamping source: T) where T : BinaryInteger {
+    public init<T: BinaryInteger>(clamping source: T) {
         fatalError()
     }
     
