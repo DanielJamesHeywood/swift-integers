@@ -36,13 +36,13 @@ extension Integer {
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
         case (false, false):
-            return _compareMagnitude(to: other)
+            return _unsignedCompare(to: other)
         case (false, true):
             return .greaterThan
         case (true, false):
             return .lessThan
         case (true, true):
-            switch _compareMagnitude(to: other) {
+            switch _unsignedCompare(to: other) {
             case .lessThan:
                 return .greaterThan
             case .greaterThan:
@@ -54,7 +54,7 @@ extension Integer {
     }
     
     @inlinable
-    internal func _compareMagnitude(to other: Integer) -> _ComparisonResult {
+    internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
         guard _words.count == other._words.count else {
             return _words.count < other._words.count ? .lessThan : .greaterThan
         }
