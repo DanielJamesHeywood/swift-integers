@@ -175,3 +175,24 @@ extension Integer: BinaryInteger {
         fatalError()
     }
 }
+
+extension FixedWidthInteger {
+    
+    @inlinable
+    internal func _addingReportingOverflow(_ rhs: Self, overflow: Bool) -> (partialValue: Self, overflow: Bool) {
+        guard overflow else {
+            return addingReportingOverflow(rhs)
+        }
+        let (partialValue, overflow) = addingReportingOverflow(rhs)
+        return overflow ? (partialValue &+ 1, true) : partialValue.addingReportingOverflow(1)
+    }
+    
+    @inlinable
+    internal func _subtractingReportingOverflow(_ rhs: Self, overflow: Bool) -> (partialValue: Self, overflow: Bool) {
+        guard overflow else {
+            return subtractingReportingOverflow(rhs)
+        }
+        let (partialValue, overflow) = subtractingReportingOverflow(rhs)
+        return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
+    }
+}
