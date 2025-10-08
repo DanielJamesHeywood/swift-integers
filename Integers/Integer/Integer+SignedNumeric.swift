@@ -8,19 +8,9 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public mutating func negate() {
-        var (partialValue, overflow) = (UInt.min, false)
+        var overflow = false
         for index in _words.indices {
-            if overflow {
-                (partialValue, overflow) = UInt.min.subtractingReportingOverflow(_words[index])
-                if overflow {
-                    partialValue &-= 1
-                } else {
-                    (partialValue, overflow) = partialValue.subtractingReportingOverflow(1)
-                }
-            } else {
-                (partialValue, overflow) = UInt.min.subtractingReportingOverflow(_words[index])
-            }
-            _words[index] = partialValue
+            (_words[index], overflow) = UInt.min._subtractingReportingOverflow(_words[index], borrowing: overflow)
         }
         if overflow {
             _words.reserveCapacity(_words.count + 1)
