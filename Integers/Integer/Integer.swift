@@ -6,6 +6,13 @@ public struct Integer {
     internal var _words: [UInt]
     
     @inlinable
+    internal init(_words: [UInt]) {
+        precondition(!_words.isEmpty)
+        self._words = _words
+        _standardize()
+    }
+    
+    @inlinable
     internal mutating func _standardize() {
         if _words.last == .min {
             repeat {
