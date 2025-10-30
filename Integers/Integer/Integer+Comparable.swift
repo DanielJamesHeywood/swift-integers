@@ -58,9 +58,9 @@ extension Integer {
         guard _words.count == other._words.count else {
             return _words.count < other._words.count ? .lessThan : .greaterThan
         }
-        for index in _words.indices.reversed() {
-            guard _words[index] == other._words[index] else {
-                return _words[index] < other._words[index] ? .lessThan : .greaterThan
+        for (word, otherWord) in zip(_words.reversed(), other._words.reversed()) {
+            guard word == otherWord else {
+                return word < otherWord ? .lessThan : .greaterThan
             }
         }
         return .equalTo
