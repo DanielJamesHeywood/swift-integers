@@ -8,6 +8,14 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public mutating func negate() {
-        fatalError()
+        var overflow = false
+        for (index, word) in _words.enumerated() {
+            (_words[index], overflow) = (0 as UInt)._subtractingReportingOverflow(word, borrowing: overflow)
+        }
+        if overflow {
+            _words.reserveCapacity(_words.count + 1)
+            _words.append(.max)
+        }
+        _standardize()
     }
 }
