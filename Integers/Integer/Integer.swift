@@ -18,16 +18,24 @@ public struct Integer {
             repeat {
                 _words.removeLast()
             } while _words.last == .min
-            if _words.last?.leadingZeroBitCount == 0 {
-                _words.append(.min)
+            if let lastWord = _words.last {
+                if lastWord.leadingZeroBitCount == 0 {
+                    _words.append(.min)
+                }
+            } else {
+                _words = [.min]
             }
         }
         if _words.last.unsafelyUnwrapped == .max {
             repeat {
                 _words.removeLast()
             } while _words.last == .max
-            if _words.last?.leadingZeroBitCount != 0 {
-                _words.append(.max)
+            if let lastWord = _words.last {
+                if lastWord.leadingZeroBitCount != 0 {
+                    _words.append(.max)
+                }
+            } else {
+                _words = [.max]
             }
         }
     }
