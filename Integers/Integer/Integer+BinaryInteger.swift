@@ -137,6 +137,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
+        guard rhs != -1 else {
+            return
+        }
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             lhs._words[index] = lhWord & rhWord
         }
@@ -150,6 +153,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
+        guard rhs != 0 else {
+            return
+        }
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             lhs._words[index] = lhWord | rhWord
         }
@@ -163,6 +169,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
+        guard rhs != 0 else {
+            return
+        }
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             lhs._words[index] = lhWord ^ rhWord
         }
