@@ -14,7 +14,7 @@ public struct Integer {
     
     @inlinable
     internal mutating func _standardize() {
-        if _words.last == .min {
+        if _words.last.unsafelyUnwrapped == .min {
             repeat {
                 _words.removeLast()
             } while _words.last == .min
@@ -22,7 +22,7 @@ public struct Integer {
                 _words.append(.min)
             }
         }
-        if _words.last == .max {
+        if _words.last.unsafelyUnwrapped == .max {
             repeat {
                 _words.removeLast()
             } while _words.last == .max
