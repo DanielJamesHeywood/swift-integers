@@ -82,6 +82,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
+        guard lhs != 0 else {
+            lhs = rhs
+            return
+        }
         guard rhs != 0 else {
             return
         }
