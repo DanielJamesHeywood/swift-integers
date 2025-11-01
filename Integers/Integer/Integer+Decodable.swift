@@ -12,6 +12,7 @@ extension Integer: Decodable {
                 )
             )
         }
-        self.init(_words: words)
+        self._words = words
+        self._standardize()
     }
 }
