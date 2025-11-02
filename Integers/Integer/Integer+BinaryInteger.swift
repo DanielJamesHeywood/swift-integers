@@ -86,7 +86,7 @@ extension Integer: BinaryInteger {
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             (lhs._words[index], overflow) = lhWord._addingReportingOverflow(rhWord, carrying: overflow)
         }
-        lhs._standardize()
+        lhs._normalize()
         fatalError()
     }
     
@@ -101,7 +101,7 @@ extension Integer: BinaryInteger {
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             (lhs._words[index], overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: overflow)
         }
-        lhs._standardize()
+        lhs._normalize()
         fatalError()
     }
     

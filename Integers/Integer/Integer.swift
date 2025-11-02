@@ -6,7 +6,7 @@ public struct Integer {
     internal var _words: [UInt]
     
     @inlinable
-    internal mutating func _standardize() {
+    internal mutating func _normalize() {
         if _words.last.unsafelyUnwrapped == .min {
             repeat {
                 _words.removeLast()

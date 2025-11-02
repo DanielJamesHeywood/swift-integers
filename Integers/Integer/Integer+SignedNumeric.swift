@@ -16,6 +16,6 @@ extension Integer: SignedNumeric {
             _words.reserveCapacity(_words.count + 1)
             _words.append(.max)
         }
-        _standardize()
+        _normalize()
     }
 }
