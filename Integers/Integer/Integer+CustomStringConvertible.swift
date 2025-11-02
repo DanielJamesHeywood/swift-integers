@@ -4,12 +4,12 @@ extension Integer: CustomStringConvertible {
     @inlinable
     public var description: String {
         var codeUnits = [] as [UInt8]
-        var value = magnitude
+        var magnitude = magnitude
         repeat {
-            let (quotient, remainder) = value.quotientAndRemainder(dividingBy: 10)
+            let (quotient, remainder) = magnitude.quotientAndRemainder(dividingBy: 10)
             codeUnits.append(UInt8(ascii: "0") &+ UInt8(remainder))
-            value = quotient
-        } while value != 0
+            magnitude = quotient
+        } while magnitude != 0
         if _isNegative {
             codeUnits.append(UInt8(ascii: "-"))
         }
