@@ -3,21 +3,21 @@ extension Integer: CustomStringConvertible {
     
     @inlinable
     public var description: String {
-        var result = [] as [UInt8]
+        var codeUnits = [] as [UInt8]
         var value = magnitude
         repeat {
             let (quotient, remainder) = value.quotientAndRemainder(dividingBy: 10)
-            result.append(UInt8(ascii: "0") &+ UInt8(remainder))
+            codeUnits.append(UInt8(ascii: "0") &+ UInt8(remainder))
             value = quotient
         } while value != 0
         if _isNegative {
-            result.append(UInt8(ascii: "-"))
+            codeUnits.append(UInt8(ascii: "-"))
         }
-        result.reverse()
+        codeUnits.reverse()
         return String(
-            unsafeUninitializedCapacity: result.count,
+            unsafeUninitializedCapacity: codeUnits.count,
             initializingUTF8With: { buffer in
-                return buffer.initialize(fromContentsOf: result)
+                return buffer.initialize(fromContentsOf: codeUnits)
             }
         )
     }
