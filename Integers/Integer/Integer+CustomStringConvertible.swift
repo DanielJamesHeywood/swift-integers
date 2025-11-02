@@ -3,8 +3,8 @@ extension Integer: CustomStringConvertible {
     
     @inlinable
     public var description: String {
-        var value = magnitude
         var result = [] as [UInt8]
+        var value = magnitude
         repeat {
             let (quotient, remainder) = value.quotientAndRemainder(dividingBy: 10)
             result.append(UInt8(ascii: "0") &+ UInt8(remainder))
