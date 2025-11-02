@@ -7,11 +7,11 @@ extension Integer: CustomStringConvertible {
         var result = [] as [UInt8]
         repeat {
             let (quotient, remainder) = value.quotientAndRemainder(dividingBy: 10)
-            result.append(UInt8(("0" as Unicode.Scalar).value) &+ UInt8(remainder))
+            result.append(UInt8(ascii: "0") &+ UInt8(remainder))
             value = quotient
         } while value != 0
         if _isNegative {
-            result.append(UInt8(("-" as Unicode.Scalar).value))
+            result.append(UInt8(ascii: "-"))
         }
         result.reverse()
         return String(
