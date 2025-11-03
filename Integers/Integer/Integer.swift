@@ -40,4 +40,9 @@ extension Integer {
     internal var _isNegative: Bool {
         return _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0
     }
+    
+    @inlinable
+    internal var _isZero: Bool {
+        return _words == [0]
+    }
 }
