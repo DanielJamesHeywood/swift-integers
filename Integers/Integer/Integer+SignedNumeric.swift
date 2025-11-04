@@ -9,8 +9,8 @@ extension Integer: SignedNumeric {
     @inlinable
     public mutating func negate() {
         var overflow = false
-        for (index, word) in _words.enumerated() {
-            (_words[index], overflow) = (0 as UInt)._subtractingReportingOverflow(word, borrowing: overflow)
+        for index in _words.indices {
+            (_words[index], overflow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: overflow)
         }
         if overflow {
             _words.reserveCapacity(_words.count + 1)
