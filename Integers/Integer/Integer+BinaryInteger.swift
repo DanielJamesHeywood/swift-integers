@@ -82,9 +82,11 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
-        var overflow = false
+        var carry = false
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            (lhs._words[index], overflow) = lhWord._addingReportingOverflow(rhWord, carrying: overflow)
+            let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+            lhs._words[index] = partialValue
+            carry = overflow
         }
         lhs._normalize()
         fatalError()
@@ -97,9 +99,11 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func -= (lhs: inout Integer, rhs: Integer) {
-        var overflow = false
+        var borrow = false
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            (lhs._words[index], overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: overflow)
+            let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+            lhs._words[index] = partialValue
+            borrow = overflow
         }
         lhs._normalize()
         fatalError()
