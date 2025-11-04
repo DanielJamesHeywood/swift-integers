@@ -83,8 +83,8 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
         var carry = false
-        for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            (lhs._words[index], carry) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+            (lhs._words[index], carry) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
         }
         lhs._normalize()
         fatalError()
@@ -98,8 +98,8 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func -= (lhs: inout Integer, rhs: Integer) {
         var borrow = false
-        for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            (lhs._words[index], borrow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+            (lhs._words[index], borrow) = lhs._words[index]._subtractingReportingOverflow(rhWord, borrowing: borrow)
         }
         lhs._normalize()
         fatalError()
@@ -127,8 +127,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
-        for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            lhs._words[index] = lhWord & rhWord
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+            lhs._words[index] &= rhWord
         }
         lhs._normalize()
         fatalError()
@@ -141,8 +141,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
-        for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            lhs._words[index] = lhWord | rhWord
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+            lhs._words[index] |= rhWord
         }
         lhs._normalize()
         fatalError()
@@ -155,8 +155,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
-        for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
-            lhs._words[index] = lhWord ^ rhWord
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+            lhs._words[index] ^= rhWord
         }
         fatalError()
     }
