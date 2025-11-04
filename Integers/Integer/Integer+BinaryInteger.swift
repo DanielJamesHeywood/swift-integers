@@ -148,10 +148,15 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
+        let lhsIsNegative = lhs._isNegative
         for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
             lhs._words[index] = lhWord | rhWord
         }
-        fatalError()
+        if lhs._words.count < rhs._words.count && !lhsIsNegative {
+            lhs._words.reserveCapacity(rhs._words.count)
+            lhs._words.append(contentsOf: rhs._words.dropFirst(lhs._words.count))
+        }
+        lhs._normalize()
     }
     
     @inlinable
