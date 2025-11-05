@@ -6,7 +6,7 @@ extension Integer: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: StaticBigInt) {
         self.init(
-            _words = Array(
+            _words: Array(
                 unsafeUninitializedCapacity: value.bitWidth._dividedRoundingUp(by: UInt.bitWidth),
                 initializingWith: { buffer, initializedCount in
                     for index in buffer.indices {
