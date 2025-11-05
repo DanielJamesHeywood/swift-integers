@@ -3,7 +3,25 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public prefix static func - (operand: Integer) -> Integer {
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: operand._words.count + 1,
+                initializingWith: { buffer, initializedCount in
+                    var borrow = false
+                    for (index, word) in operand._words.enumerated() {
+                        let (partialValue, overflow) = (0 as UInt)._subtractingReportingOverflow(word, borrowing: borrow)
+                        buffer.initializeElement(at: index, to: partialValue)
+                        borrow = overflow
+                    }
+                    if borrow {
+                        buffer.initializeElement(at: operand._words.count, to: .max)
+                        initializedCount = operand._words.count + 1
+                    } else {
+                        initializedCount = operand._words.count
+                    }
+                }
+            )
+        )
     }
     
     @inlinable
