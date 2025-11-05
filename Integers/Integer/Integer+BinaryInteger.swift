@@ -117,7 +117,17 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public prefix static func ~ (x: Integer) -> Integer {
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: x._words.count,
+                initializingWith: { buffer, initializedCount in
+                    for (index, word) in x._words.enumerated() {
+                        buffer[index] = ~word
+                    }
+                    initializedCount = x._words.count
+                }
+            )
+        )
     }
     
     @inlinable
