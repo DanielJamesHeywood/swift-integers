@@ -28,7 +28,9 @@ extension Integer: SignedNumeric {
     public mutating func negate() {
         var borrow = false
         for index in _words.indices {
-            (_words[index], borrow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: borrow)
+            let (partialValue, overflow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: borrow)
+            _words[index] = partialValue
+            borrow = overflow
         }
         if borrow {
             _words.reserveCapacity(_words.count + 1)
