@@ -5,14 +5,16 @@ extension Integer: ExpressibleByIntegerLiteral {
     
     @inlinable
     public init(integerLiteral value: StaticBigInt) {
-        self._words = Array(
-            unsafeUninitializedCapacity: value.bitWidth._dividedRoundingUp(by: UInt.bitWidth),
-            initializingWith: { buffer, initializedCount in
-                for index in buffer.indices {
-                    buffer.initializeElement(at: index, to: value[index])
+        self.init(
+            _words = Array(
+                unsafeUninitializedCapacity: value.bitWidth._dividedRoundingUp(by: UInt.bitWidth),
+                initializingWith: { buffer, initializedCount in
+                    for index in buffer.indices {
+                        buffer.initializeElement(at: index, to: value[index])
+                    }
+                    initializedCount = buffer.count
                 }
-                initializedCount = buffer.count
-            }
+            )
         )
     }
 }
