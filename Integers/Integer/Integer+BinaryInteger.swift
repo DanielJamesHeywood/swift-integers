@@ -122,7 +122,7 @@ extension Integer: BinaryInteger {
                 unsafeUninitializedCapacity: x._words.count,
                 initializingWith: { buffer, initializedCount in
                     for (index, word) in x._words.enumerated() {
-                        buffer[index] = ~word
+                        buffer.initializeElement(at: index, to: ~word)
                     }
                     initializedCount = x._words.count
                 }
