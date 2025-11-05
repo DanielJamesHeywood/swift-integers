@@ -6,6 +6,13 @@ public struct Integer {
     internal var _words: [UInt]
     
     @inlinable
+    internal init(_words: [UInt]) {
+        precondition(!_words.isEmpty)
+        self._words = _words
+        self._normalize()
+    }
+    
+    @inlinable
     internal mutating func _normalize() {
         if _words.last.unsafelyUnwrapped == .min {
             repeat {
