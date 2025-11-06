@@ -221,3 +221,11 @@ extension FixedWidthInteger {
         return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
     }
 }
+
+extension Collection {
+    
+    @inlinable
+    internal func _enumeratedWithIndices() -> Zip2Sequence<Indices, Self> {
+        return zip(indices, self)
+    }
+}
