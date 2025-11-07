@@ -229,3 +229,12 @@ extension Collection {
         return zip(indices, self)
     }
 }
+
+extension UnsafeMutableBufferPointer {
+    
+    @inlinable
+    internal func _initializeElements(startingAt index: Index, toContentsOf source: some Collection<Element>) {
+        precondition(startIndex <= index && index + source.count <= endIndex)
+        _ = suffix(from: index).initialize(fromContentsOf: source)
+    }
+}
