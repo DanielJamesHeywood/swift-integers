@@ -154,7 +154,37 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^ (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: Swift.max(lhs._words.count, rhs._words.count),
+                initializingWith: { buffer, initializedCount in
+                    for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
+                        buffer.initializeElement(at: index, to: lhWord ^ rhWord)
+                    }
+                    if lhs._words.count > rhs._words.count {
+                        let lhRemainingWords = lhs._words.suffix(from: rhs._words.endIndex)
+                        if rhs._isNegative {
+                            for (index, lhWord) in lhRemainingWords._enumeratedWithIndices() {
+                                buffer.initializeElement(at: index, to: ~lhWord)
+                            }
+                        } else {
+                            buffer._initializeElements(startingAt: rhs._words.endIndex, toContentsOf: lhRemainingWords)
+                        }
+                    }
+                    if lhs._words.count < rhs._words.count {
+                        let rhRemainingWords = rhs._words.suffix(from: lhs._words.endIndex)
+                        if lhs._isNegative {
+                            for (index, rhWord) in rhRemainingWords._enumeratedWithIndices() {
+                                buffer.initializeElement(at: index, to: ~rhWord)
+                            }
+                        } else {
+                            buffer._initializeElements(startingAt: lhs._words.endIndex, toContentsOf: rhRemainingWords)
+                        }
+                    }
+                    initializedCount = buffer.count
+                }
+            )
+        )
     }
     
     @inlinable
