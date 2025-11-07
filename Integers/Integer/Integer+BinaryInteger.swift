@@ -77,7 +77,21 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
+        let wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: wordCount + 1,
+                initializingWith: { buffer, initializedCount in
+                    var carry = false
+                    for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
+                        let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+                        buffer.initializeElement(at: index, to: partialValue)
+                        carry = overflow
+                    }
+                    fatalError()
+                }
+            )
+        )
     }
     
     @inlinable
@@ -94,7 +108,21 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
+        let wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: wordCount + 1,
+                initializingWith: { buffer, initializedCount in
+                    var borrow = false
+                    for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
+                        let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+                        buffer.initializeElement(at: index, to: partialValue)
+                        borrow = overflow
+                    }
+                    fatalError()
+                }
+            )
+        )
     }
     
     @inlinable
