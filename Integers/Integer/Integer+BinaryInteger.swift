@@ -140,7 +140,38 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func | (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
+        guard lhs != 0 && rhs != -1 else {
+            return rhs
+        }
+        guard rhs != 0 && lhs != -1 else {
+            return lhs
+        }
+        var wordCount = Swift.min(lhs._words.count, rhs._words.count)
+        if lhs._words.count > rhs._words.count && !rhs._isNegative {
+            wordCount = lhs._words.count
+        }
+        if lhs._words.count < rhs._words.count && !lhs._isNegative {
+            wordCount = rhs._words.count
+        }
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: wordCount,
+                initializingWith: { buffer, initializedCount in
+                    for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
+                        buffer.initializeElement(at: index, to: lhWord | rhWord)
+                    }
+                    if lhs._words.count > rhs._words.count && !rhs._isNegative {
+                        let lhRemainingWords = lhs._words.suffix(from: rhs._words.endIndex)
+                        buffer._initializeElements(startingAt: rhs._words.endIndex, toContentsOf: lhRemainingWords)
+                    }
+                    if lhs._words.count < rhs._words.count && !lhs._isNegative {
+                        let rhRemainingWords = rhs._words.suffix(from: lhs._words.endIndex)
+                        buffer._initializeElements(startingAt: lhs._words.endIndex, toContentsOf: rhRemainingWords)
+                    }
+                    initializedCount = wordCount
+                }
+            )
+        )
     }
     
     @inlinable
