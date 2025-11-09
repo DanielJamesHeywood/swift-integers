@@ -280,10 +280,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
+        let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
         for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
             lhs._words[index] ^= rhWord
         }
-        fatalError()
+        if lhs._words.count > rhs._words.count {}
+        if lhs._words.count < rhs._words.count {}
+        lhs._normalize()
     }
     
     @inlinable
