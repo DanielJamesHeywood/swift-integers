@@ -184,11 +184,17 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
+        let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
         for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
             lhs._words[index] &= rhWord
         }
+        if lhs._words.count > rhs._words.count && !rhsIsNegative {
+            lhs._words.removeLast(lhs._words.count - rhs._words.count)
+        }
+        if lhs._words.count < rhs._words.count && lhsIsNegative {
+            lhs._words.append(contentsOf: rhs._words.suffix(from: lhs._words.endIndex))
+        }
         lhs._normalize()
-        fatalError()
     }
     
     @inlinable
@@ -223,11 +229,17 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
+        let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
         for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
             lhs._words[index] |= rhWord
         }
+        if lhs._words.count > rhs._words.count && rhsIsNegative {
+            lhs._words.removeLast(lhs._words.count - rhs._words.count)
+        }
+        if lhs._words.count < rhs._words.count && !lhsIsNegative {
+            lhs._words.append(contentsOf: rhs._words.suffix(from: lhs._words.endIndex))
+        }
         lhs._normalize()
-        fatalError()
     }
     
     @inlinable
