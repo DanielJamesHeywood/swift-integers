@@ -103,7 +103,6 @@ extension Integer: BinaryInteger {
             carry = overflow
         }
         lhs._normalize()
-        fatalError()
     }
     
     @inlinable
@@ -134,7 +133,6 @@ extension Integer: BinaryInteger {
             borrow = overflow
         }
         lhs._normalize()
-        fatalError()
     }
     
     @inlinable
