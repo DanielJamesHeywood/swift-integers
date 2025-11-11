@@ -97,7 +97,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
         var carry = false
-        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
             lhs._words[index] = partialValue
             carry = overflow
@@ -127,7 +127,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func -= (lhs: inout Integer, rhs: Integer) {
         var borrow = false
-        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._subtractingReportingOverflow(rhWord, borrowing: borrow)
             lhs._words[index] = partialValue
             borrow = overflow
@@ -183,7 +183,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             lhs._words[index] &= rhWord
         }
         if lhs._words.count > rhs._words.count && !rhsIsNegative {
@@ -228,7 +228,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             lhs._words[index] |= rhWord
         }
         if lhs._words.count > rhs._words.count && rhsIsNegative {
@@ -279,7 +279,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        for (index, rhWord) in rhs._words.prefix(lhs._words.count).enumerated() {
+        for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             lhs._words[index] ^= rhWord
         }
         if lhs._words.count > rhs._words.count {}
