@@ -1,2 +1,0 @@
-
-extension Integer: @unchecked Sendable {}

@@ -1,4 +1,120 @@
 
+@frozen
+public struct Integer {
+    
+    @usableFromInline
+    internal var _words: [UInt]
+    
+    @inlinable
+    internal init(_words: [UInt]) {
+        precondition(!_words.isEmpty)
+        self._words = _words
+        self._normalize()
+    }
+    
+    @inlinable
+    internal mutating func _normalize() {
+        if _words.last.unsafelyUnwrapped == .min {
+            repeat {
+                _words.removeLast()
+            } while _words.last == .min
+            if let lastWord = _words.last {
+                if lastWord.leadingZeroBitCount == 0 {
+                    _words.append(.min)
+                }
+            } else {
+                _words = [.min]
+            }
+        }
+        if _words.last.unsafelyUnwrapped == .max {
+            repeat {
+                _words.removeLast()
+            } while _words.last == .max
+            if let lastWord = _words.last {
+                if lastWord.leadingZeroBitCount != 0 {
+                    _words.append(.max)
+                }
+            } else {
+                _words = [.max]
+            }
+        }
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal var _isNegative: Bool {
+        return _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0
+    }
+    
+    @inlinable
+    internal var _isZero: Bool {
+        return _words == [0]
+    }
+}
+
+extension Integer: AdditiveArithmetic {
+    
+    @inlinable
+    public static var zero: Integer {
+        return 0
+    }
+}
+
+extension Integer: Numeric {
+    
+    @inlinable
+    public init?<T: BinaryInteger>(exactly source: T) {
+        self.init(source)
+    }
+    
+    public typealias Magnitude = Integer
+    
+    @inlinable
+    public var magnitude: Integer {
+        return _isNegative ? -self : self
+    }
+}
+
+extension Integer: SignedNumeric {
+    
+    @inlinable
+    public prefix static func - (operand: Integer) -> Integer {
+        return 0 - operand
+    }
+    
+    @inlinable
+    public mutating func negate() {
+        var borrow = false
+        for index in _words.indices {
+            let (partialValue, overflow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: borrow)
+            _words[index] = partialValue
+            borrow = overflow
+        }
+        if borrow {
+            _words.reserveCapacity(_words.count + 1)
+            _words.append(.max)
+        }
+        _normalize()
+    }
+}
+
+extension Integer: Strideable {
+    
+    public typealias Stride = Integer
+    
+    @inlinable
+    public func distance(to other: Integer) -> Integer {
+        return other - self
+    }
+    
+    @inlinable
+    public func advanced(by n: Integer) -> Integer {
+        return self + n
+    }
+}
+
 extension Integer: BinaryInteger {
     
     @inlinable
@@ -350,6 +466,222 @@ extension Integer: BinaryInteger {
     }
 }
 
+extension Integer: SignedInteger {}
+
+extension Integer: Equatable {
+    
+    @inlinable
+    public static func == (lhs: Integer, rhs: Integer) -> Bool {
+        return lhs._words == rhs._words
+    }
+}
+
+extension Integer: Comparable {
+    
+    @inlinable
+    public static func < (lhs: Integer, rhs: Integer) -> Bool {
+        return lhs._compare(to: rhs) == .lessThan
+    }
+    
+    @inlinable
+    public static func <= (lhs: Integer, rhs: Integer) -> Bool {
+        return lhs._compare(to: rhs) != .greaterThan
+    }
+    
+    @inlinable
+    public static func >= (lhs: Integer, rhs: Integer) -> Bool {
+        return lhs._compare(to: rhs) != .lessThan
+    }
+    
+    @inlinable
+    public static func > (lhs: Integer, rhs: Integer) -> Bool {
+        return lhs._compare(to: rhs) == .greaterThan
+    }
+}
+
+extension Integer {
+    
+    @frozen
+    @usableFromInline
+    internal enum _ComparisonResult {
+        case lessThan
+        case greaterThan
+        case equalTo
+    }
+    
+    @inlinable
+    internal func _compare(to other: Integer) -> _ComparisonResult {
+        switch (_isNegative, other._isNegative) {
+        case (false, false):
+            return _unsignedCompare(to: other)
+        case (false, true):
+            return .greaterThan
+        case (true, false):
+            return .lessThan
+        case (true, true):
+            switch _unsignedCompare(to: other) {
+            case .lessThan:
+                return .greaterThan
+            case .greaterThan:
+                return .lessThan
+            case .equalTo:
+                return .equalTo
+            }
+        }
+    }
+    
+    @inlinable
+    internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
+        guard _words.count == other._words.count else {
+            return _words.count < other._words.count ? .lessThan : .greaterThan
+        }
+        for (word, otherWord) in zip(_words.reversed(), other._words.reversed()) {
+            guard word == otherWord else {
+                return word < otherWord ? .lessThan : .greaterThan
+            }
+        }
+        return .equalTo
+    }
+}
+
+extension Integer: Hashable {
+    
+    @inlinable
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(_words)
+    }
+}
+
+extension Integer: CustomStringConvertible {
+    
+    @inlinable
+    public var description: String {
+        var codeUnits = [] as [UInt8]
+        var magnitude = magnitude
+        repeat {
+            let (quotient, remainder) = magnitude.quotientAndRemainder(dividingBy: 10)
+            codeUnits.append(UInt8(ascii: "0") &+ UInt8(remainder))
+            magnitude = quotient
+        } while magnitude != 0
+        if _isNegative {
+            codeUnits.append(UInt8(ascii: "-"))
+        }
+        codeUnits.reverse()
+        return String(
+            unsafeUninitializedCapacity: codeUnits.count,
+            initializingUTF8With: { buffer in
+                return buffer.initialize(fromContentsOf: codeUnits)
+            }
+        )
+    }
+}
+
+
+extension Integer: LosslessStringConvertible {
+    
+    @inlinable
+    public init?(_ description: String) {
+        var description = description
+        let integer = description.withUTF8 { codeUnits in
+            return _parseInteger(from: codeUnits)
+        }
+        guard let integer else {
+            return nil
+        }
+        self = integer
+    }
+}
+
+@inlinable
+internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integer? {
+    guard !codeUnits.isEmpty else {
+        return nil
+    }
+    switch codeUnits[0] {
+    case UInt8(ascii: "-"):
+        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
+    case UInt8(ascii: "+"):
+        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
+    default:
+        return _parseIntegerDigits(from: codeUnits)
+    }
+}
+
+@inlinable
+internal func _parseIntegerDigits(from codeUnits: UnsafeBufferPointer<UInt8>, isNegative: Bool = false) -> Integer? {
+    guard !codeUnits.isEmpty else {
+        return nil
+    }
+    var integer = 0 as Integer
+    for codeUnit in codeUnits {
+        guard UInt8(ascii: "0")...UInt8(ascii: "9") ~= codeUnit else {
+            return nil
+        }
+        integer *= 10
+        integer += Integer(codeUnit &- UInt8(ascii: "0"))
+    }
+    if isNegative {
+        integer.negate()
+    }
+    return integer
+}
+
+extension Integer: Encodable {
+    
+    @inlinable
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(_words)
+    }
+}
+
+extension Integer: Decodable {
+    
+    @inlinable
+    public init(from decoder: any Decoder) throws {
+        let words = try decoder.singleValueContainer().decode([UInt].self)
+        guard !words.isEmpty else {
+            throw DecodingError.dataCorrupted(
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Cannot initialize Integer from an empty array of words."
+                )
+            )
+        }
+        self.init(_words: words)
+    }
+}
+
+extension Integer: ExpressibleByIntegerLiteral {
+    
+    public typealias IntegerLiteralType = StaticBigInt
+    
+    @inlinable
+    public init(integerLiteral value: StaticBigInt) {
+        self.init(
+            _words: Array(
+                unsafeUninitializedCapacity: value.bitWidth._dividedRoundingUp(by: UInt.bitWidth),
+                initializingWith: { buffer, initializedCount in
+                    for index in buffer.indices {
+                        buffer.initializeElement(at: index, to: value[index])
+                    }
+                    initializedCount = buffer.count
+                }
+            )
+        )
+    }
+}
+
+extension Integer: CustomReflectable {
+    
+    @inlinable
+    public var customMirror: Mirror {
+        return Mirror(self, children: EmptyCollection())
+    }
+}
+
+extension Integer: @unchecked Sendable {}
+
 extension FixedWidthInteger {
     
     @inlinable
@@ -387,3 +719,15 @@ extension UnsafeMutableBufferPointer {
         _ = suffix(from: index).initialize(fromContentsOf: source)
     }
 }
+
+
+extension BinaryInteger {
+    
+    @inlinable
+    internal func _dividedRoundingUp(by other: Self) -> Self {
+        precondition(other != 0)
+        let (quotient, remainder) = quotientAndRemainder(dividingBy: other)
+        return remainder != 0 && signum() == other.signum() ? quotient + 1 : quotient
+    }
+}
+
