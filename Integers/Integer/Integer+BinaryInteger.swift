@@ -20,7 +20,7 @@ extension Integer: BinaryInteger {
             
             let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
             let shiftedBitPattern = Integer(source.significandBitPattern) << shift
-            var integer = ((1 as Integer) << source.exponent) | shiftedBitPattern
+            var integer = 1 << source.exponent | shiftedBitPattern
             if source < 0 {
                 integer.negate()
             }
@@ -40,7 +40,7 @@ extension Integer: BinaryInteger {
             
             let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
             let shiftedBitPattern = Integer(source.significandBitPattern) << shift
-            var integer = ((1 as Integer) << source.exponent) | shiftedBitPattern
+            var integer = 1 << source.exponent | shiftedBitPattern
             if source < 0 {
                 integer.negate()
             }
