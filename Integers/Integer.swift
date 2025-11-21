@@ -576,7 +576,6 @@ extension Integer: CustomStringConvertible {
     }
 }
 
-
 extension Integer: LosslessStringConvertible {
     
     @inlinable
@@ -720,7 +719,6 @@ extension UnsafeMutableBufferPointer {
     }
 }
 
-
 extension BinaryInteger {
     
     @inlinable
@@ -730,4 +728,3 @@ extension BinaryInteger {
         return remainder != 0 && signum() == other.signum() ? quotient + 1 : quotient
     }
 }
-
