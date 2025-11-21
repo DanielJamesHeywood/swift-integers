@@ -17,15 +17,12 @@ extension Integer: BinaryInteger {
             guard source.significandWidth <= source.exponent else {
                 return nil
             }
-            
-            let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
-            let shiftedBitPattern = Integer(source.significandBitPattern) << shift
-            var integer = 1 << source.exponent | shiftedBitPattern
+            let significandShift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
+            var integer = 1 << source.exponent | Integer(source.significandBitPattern) << significandShift
             if source < 0 {
                 integer.negate()
             }
             self = integer
-            
         }
     }
     
@@ -37,15 +34,12 @@ extension Integer: BinaryInteger {
         if source.isZero {
             self = 0
         } else {
-            
-            let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
-            let shiftedBitPattern = Integer(source.significandBitPattern) << shift
-            var integer = 1 << source.exponent | shiftedBitPattern
+            let significandShift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
+            var integer = 1 << source.exponent | Integer(source.significandBitPattern) << significandShift
             if source < 0 {
                 integer.negate()
             }
             self = integer
-            
         }
     }
     
