@@ -8,12 +8,45 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
-        fatalError()
+        guard source.isFinite else {
+            return nil
+        }
+        if source.isZero {
+            self = 0
+        } else {
+            guard source.significandWidth <= source.exponent else {
+                return nil
+            }
+            
+            let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
+            let shiftedBitPattern = Integer(source.significandBitPattern) << shift
+            var integer = ((1 as Integer) << source.exponent) | shiftedBitPattern
+            if source < 0 {
+                integer.negate()
+            }
+            self = integer
+            
+        }
     }
     
     @inlinable
     public init<T: BinaryFloatingPoint>(_ source: T) {
-        fatalError()
+        guard source.isFinite else {
+            preconditionFailure()
+        }
+        if source.isZero {
+            self = 0
+        } else {
+            
+            let shift = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
+            let shiftedBitPattern = Integer(source.significandBitPattern) << shift
+            var integer = ((1 as Integer) << source.exponent) | shiftedBitPattern
+            if source < 0 {
+                integer.negate()
+            }
+            self = integer
+            
+        }
     }
     
     @inlinable
