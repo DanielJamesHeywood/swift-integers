@@ -144,9 +144,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init<T: BinaryFloatingPoint>(_ source: T) {
-        guard source.isFinite else {
-            preconditionFailure()
-        }
+        precondition(source.isFinite)
         if source.isZero {
             self = 0
         } else {
