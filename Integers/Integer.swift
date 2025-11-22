@@ -124,37 +124,15 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
-        guard source.isFinite else {
+        guard let integer = source._convertExactlyToInteger() else {
             return nil
         }
-        if source.isZero {
-            self = 0
-        } else {
-            guard source.significandWidth <= source.exponent else {
-                return nil
-            }
-            let significandExponent = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
-            var integer = 1 << source.exponent | Integer(source.significandBitPattern) << significandExponent
-            if source < 0 {
-                integer.negate()
-            }
-            self = integer
-        }
+        self = integer
     }
     
     @inlinable
     public init<T: BinaryFloatingPoint>(_ source: T) {
-        precondition(source.isFinite)
-        if source.isZero {
-            self = 0
-        } else {
-            let significandExponent = source.exponent - T.Exponent(source.significandWidth &+ source.significandBitPattern.trailingZeroBitCount)
-            var integer = 1 << source.exponent | Integer(source.significandBitPattern) << significandExponent
-            if source < 0 {
-                integer.negate()
-            }
-            self = integer
-        }
+        self = source._convertToInteger()
     }
     
     @inlinable
@@ -687,6 +665,42 @@ extension Integer: CustomReflectable {
 }
 
 extension Integer: @unchecked Sendable {}
+
+extension BinaryFloatingPoint {
+    
+    @inlinable
+    internal func _convertExactlyToInteger() -> Integer? {
+        guard isFinite else {
+            return nil
+        }
+        guard !isZero else {
+            return 0
+        }
+        guard significandWidth <= exponent else {
+            return nil
+        }
+        let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
+        var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
+        if isLess(than: 0) {
+            integer.negate()
+        }
+        return integer
+    }
+    
+    @inlinable
+    internal func _convertToInteger() -> Integer {
+        precondition(isFinite)
+        guard !isZero else {
+            return 0
+        }
+        let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
+        var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
+        if isLess(than: 0) {
+            integer.negate()
+        }
+        return integer
+    }
+}
 
 extension FixedWidthInteger {
     
