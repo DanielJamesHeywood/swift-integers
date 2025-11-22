@@ -161,9 +161,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init<T: BinaryInteger>(_ source: T) {
-        if T.isSigned || source.words.last.unsafelyUnwrapped.leadingZeroBitCount != 0 {
-            self.init(_words: Array(source.words))
-        } else {
+        if !T.isSigned && source.words.last.unsafelyUnwrapped.leadingZeroBitCount == 0 {
             self.init(
                 _words: Array(
                     unsafeUninitializedCapacity: source.words.count + 1,
@@ -174,6 +172,8 @@ extension Integer: BinaryInteger {
                     }
                 )
             )
+        } else {
+            self.init(_words: Array(source.words))
         }
     }
     
