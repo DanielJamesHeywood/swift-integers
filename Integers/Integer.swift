@@ -205,6 +205,12 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
+        if lhs == 0 {
+            return rhs
+        }
+        if rhs == 0 {
+            return lhs
+        }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -235,6 +241,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
+        if rhs == 0 {
+            return lhs
+        }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
