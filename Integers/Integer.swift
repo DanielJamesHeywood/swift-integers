@@ -458,7 +458,7 @@ extension BinaryFloatingPoint {
         guard isFinite else {
             return nil
         }
-        guard !isZero else {
+        if isZero {
             return 0
         }
         guard significandWidth <= exponent else {
@@ -475,7 +475,7 @@ extension BinaryFloatingPoint {
     @inlinable
     internal func _convertToInteger() -> Integer {
         precondition(isFinite)
-        guard !isZero else {
+        if isZero {
             return 0
         }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
