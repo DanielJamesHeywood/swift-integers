@@ -494,20 +494,14 @@ extension Integer {
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
-        case (false, false):
-            return _unsignedCompare(to: other)
-        case (false, true):
-            return .greaterThan
-        case (true, false):
-            return .lessThan
+        case (false, false): return _unsignedCompare(to: other)
+        case (false, true): return .greaterThan
+        case (true, false): return .lessThan
         case (true, true):
             switch _unsignedCompare(to: other) {
-            case .lessThan:
-                return .greaterThan
-            case .greaterThan:
-                return .lessThan
-            case .equalTo:
-                return .equalTo
+            case .lessThan: return .greaterThan
+            case .greaterThan: return .lessThan
+            case .equalTo: return .equalTo
             }
         }
     }
@@ -567,12 +561,9 @@ extension Integer: LosslessStringConvertible {
 internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integer? {
     guard !codeUnits.isEmpty else { return nil }
     switch codeUnits[0] {
-    case UInt8(ascii: "-"):
-        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
-    case UInt8(ascii: "+"):
-        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
-    default:
-        return _parseIntegerDigits(from: codeUnits)
+    case UInt8(ascii: "-"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
+    case UInt8(ascii: "+"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
+    default: return _parseIntegerDigits(from: codeUnits)
     }
 }
 
