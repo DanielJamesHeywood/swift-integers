@@ -205,10 +205,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        if lhs == 0 {
+        guard lhs != 0 else {
             return rhs
         }
-        if rhs == 0 {
+        guard rhs != 0 else {
             return lhs
         }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
@@ -241,7 +241,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        if rhs == 0 {
+        guard rhs != 0 else {
             return lhs
         }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
@@ -467,7 +467,7 @@ extension BinaryFloatingPoint {
         guard isFinite else {
             return nil
         }
-        if isZero {
+        guard !isZero else {
             return 0
         }
         guard significandWidth <= exponent else {
@@ -484,7 +484,7 @@ extension BinaryFloatingPoint {
     @inlinable
     internal func _convertToInteger() -> Integer {
         precondition(isFinite)
-        if isZero {
+        guard !isZero else {
             return 0
         }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
