@@ -108,9 +108,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
-        guard let integer = source._convertExactlyToInteger() else {
-            return nil
-        }
+        guard let integer = source._convertExactlyToInteger() else { return nil }
         self = integer
     }
     
@@ -153,13 +151,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public var trailingZeroBitCount: Int {
-        guard let index = _words.firstIndex(
-            where: { word in
-                return word != 0
-            }
-        ) else {
-            return UInt.bitWidth
-        }
+        guard let index = _words.firstIndex(where: { word in word != 0 }) else { return UInt.bitWidth }
         return index * UInt.bitWidth + _words[index].trailingZeroBitCount
     }
     
@@ -185,12 +177,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
-            return rhs
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard lhs != 0 else { return rhs }
+        guard rhs != 0 else { return lhs }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -221,9 +209,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard rhs != 0 else { return lhs }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -263,21 +249,13 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public prefix static func ~ (x: Integer) -> Integer {
-        return x ^ -1
-    }
+    public prefix static func ~ (x: Integer) -> Integer { x ^ -1 }
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0, rhs != 0 else {
-            return 0
-        }
-        guard lhs != -1 else {
-            return rhs
-        }
-        guard rhs != -1 else {
-            return lhs
-        }
+        guard lhs != 0, rhs != 0 else { return 0 }
+        guard lhs != -1 else { return rhs }
+        guard rhs != -1 else { return lhs }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
         if lhs._words.count > rhs._words.count && rhs._isNegative {
             wordCount = lhs._words.count
@@ -323,15 +301,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func | (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
-            return rhs
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
-        guard lhs != -1, rhs != -1 else {
-            return -1
-        }
+        guard lhs != 0 else { return rhs }
+        guard rhs != 0 else { return lhs }
+        guard lhs != -1, rhs != -1 else { return -1 }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
         if lhs._words.count > rhs._words.count && !rhs._isNegative {
             wordCount = lhs._words.count
@@ -377,12 +349,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^ (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
-            return rhs
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard lhs != 0 else { return rhs }
+        guard rhs != 0 else { return lhs }
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -466,15 +434,9 @@ extension BinaryFloatingPoint {
     
     @inlinable
     internal func _convertExactlyToInteger() -> Integer? {
-        guard isFinite else {
-            return nil
-        }
-        guard !isZero else {
-            return 0
-        }
-        guard significandWidth <= exponent else {
-            return nil
-        }
+        guard isFinite else { return nil }
+        guard !isZero else { return 0 }
+        guard significandWidth <= exponent else { return nil }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
         var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
         if isLess(than: 0) {
@@ -486,9 +448,7 @@ extension BinaryFloatingPoint {
     @inlinable
     internal func _convertToInteger() -> Integer {
         precondition(isFinite)
-        guard !isZero else {
-            return 0
-        }
+        guard !isZero else { return 0 }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
         var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
         if isLess(than: 0) {
@@ -554,13 +514,9 @@ extension Integer {
     
     @inlinable
     internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
-        guard _words.count == other._words.count else {
-            return _words.count < other._words.count ? .lessThan : .greaterThan
-        }
+        guard _words.count == other._words.count else { return _words.count < other._words.count ? .lessThan : .greaterThan }
         for (word, otherWord) in zip(_words.reversed(), other._words.reversed()) {
-            guard word == otherWord else {
-                return word < otherWord ? .lessThan : .greaterThan
-            }
+            guard word == otherWord else { return word < otherWord ? .lessThan : .greaterThan }
         }
         return .equalTo
     }
@@ -591,9 +547,7 @@ extension Integer: CustomStringConvertible {
         codeUnits.reverse()
         return String(
             unsafeUninitializedCapacity: codeUnits.count,
-            initializingUTF8With: { buffer in
-                return buffer.initialize(fromContentsOf: codeUnits)
-            }
+            initializingUTF8With: { buffer in buffer.initialize(fromContentsOf: codeUnits) }
         )
     }
 }
@@ -603,21 +557,15 @@ extension Integer: LosslessStringConvertible {
     @inlinable
     public init?(_ description: String) {
         var description = description
-        let integer = description.withUTF8 { codeUnits in
-            return _parseInteger(from: codeUnits)
-        }
-        guard let integer else {
-            return nil
-        }
+        let integer = description.withUTF8 { codeUnits in _parseInteger(from: codeUnits) }
+        guard let integer else { return nil }
         self = integer
     }
 }
 
 @inlinable
 internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integer? {
-    guard !codeUnits.isEmpty else {
-        return nil
-    }
+    guard !codeUnits.isEmpty else { return nil }
     switch codeUnits[0] {
     case UInt8(ascii: "-"):
         return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
@@ -630,14 +578,10 @@ internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integ
 
 @inlinable
 internal func _parseIntegerDigits(from codeUnits: UnsafeBufferPointer<UInt8>, isNegative: Bool = false) -> Integer? {
-    guard !codeUnits.isEmpty else {
-        return nil
-    }
+    guard !codeUnits.isEmpty else { return nil }
     var integer = 0 as Integer
     for codeUnit in codeUnits {
-        guard UInt8(ascii: "0")...UInt8(ascii: "9") ~= codeUnit else {
-            return nil
-        }
+        guard UInt8(ascii: "0")...UInt8(ascii: "9") ~= codeUnit else { return nil }
         integer *= 10
         integer += Integer(codeUnit &- UInt8(ascii: "0"))
     }
@@ -705,18 +649,14 @@ extension FixedWidthInteger {
     
     @inlinable
     internal func _addingReportingOverflow(_ rhs: Self, carrying: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard carrying else {
-            return addingReportingOverflow(rhs)
-        }
+        guard carrying else { return addingReportingOverflow(rhs) }
         let (partialValue, overflow) = addingReportingOverflow(rhs)
         return overflow ? (partialValue &+ 1, true) : partialValue.addingReportingOverflow(1)
     }
     
     @inlinable
     internal func _subtractingReportingOverflow(_ rhs: Self, borrowing: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard borrowing else {
-            return subtractingReportingOverflow(rhs)
-        }
+        guard borrowing else { return subtractingReportingOverflow(rhs) }
         let (partialValue, overflow) = subtractingReportingOverflow(rhs)
         return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
     }
