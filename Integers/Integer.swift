@@ -76,6 +76,9 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public mutating func negate() {
+        guard !_isZero else {
+            return
+        }
         var borrow = false
         for index in _words.indices {
             let (partialValue, overflow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: borrow)
