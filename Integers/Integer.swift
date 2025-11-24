@@ -393,6 +393,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
+        if lhs._words.count < rhs._words.count {
+            lhs._words.reserveCapacity(rhs._words.count)
+        }
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             lhs._words[index] ^= rhWord
