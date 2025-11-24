@@ -85,11 +85,7 @@ extension Integer: SignedNumeric {
             _words[index] = partialValue
             borrow = overflow
         }
-        if borrow {
-            _words.reserveCapacity(_words.count + 1)
-            _words.append(.max)
-        }
-        _normalize()
+        fatalError()
     }
 }
 
