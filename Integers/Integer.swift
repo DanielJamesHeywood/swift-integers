@@ -198,6 +198,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
+        guard lhs != 0 else {
+            lhs = rhs
+            return
+        }
+        guard rhs != 0 else {
+            return
+        }
         var carry = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
@@ -229,6 +236,9 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func -= (lhs: inout Integer, rhs: Integer) {
+        guard rhs != 0 else {
+            return
+        }
         var borrow = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._subtractingReportingOverflow(rhWord, borrowing: borrow)
