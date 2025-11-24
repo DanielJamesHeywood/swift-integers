@@ -209,7 +209,6 @@ extension Integer: BinaryInteger {
             lhs._words.reserveCapacity(rhs._words.count)
         }
         fatalError()
-        lhs._normalize()
     }
     
     @inlinable
@@ -241,7 +240,6 @@ extension Integer: BinaryInteger {
             lhs._words.reserveCapacity(rhs._words.count)
         }
         fatalError()
-        lhs._normalize()
     }
     
     @inlinable

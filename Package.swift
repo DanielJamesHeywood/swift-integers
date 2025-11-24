@@ -1,23 +1,10 @@
-// swift-tools-version: 6.2
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 6.0
 
 import PackageDescription
 
 let package = Package(
-    name: "integers",
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "integers",
-            targets: ["integers"]
-        ),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "integers"
-        ),
-
-    ]
+    name: "swift-integers",
+    platforms: [.macOS("15.0"), .iOS("18.0"), .watchOS("11.0"), .tvOS("18.0"), .visionOS("2.0")],
+    products: [.library(name: "Integers", targets: ["Integers"])],
+    targets: [.target(name: "Integers")]
 )
