@@ -253,8 +253,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0, rhs != -1 else { return lhs }
         guard rhs != 0, lhs != -1 else { return rhs }
+        guard lhs != 0, rhs != -1 else { return lhs }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
         if lhs._words.count > rhs._words.count && rhs._isNegative {
             wordCount = lhs._words.count
@@ -285,11 +285,11 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
-        guard lhs != 0, rhs != -1 else {
-            return
-        }
         guard rhs != 0, lhs != -1 else {
             lhs = rhs
+            return
+        }
+        guard lhs != 0, rhs != -1 else {
             return
         }
         if lhs._words.count < rhs._words.count && !lhs._isNegative {
