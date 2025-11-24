@@ -335,6 +335,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
+        guard lhs != 0, rhs != -1 else {
+            lhs = rhs
+            return
+        }
+        guard rhs != 0, lhs != -1 else {
+            return
+        }
         if lhs._words.count < rhs._words.count && !lhs._isNegative {
             lhs._words.reserveCapacity(rhs._words.count)
         }
@@ -391,6 +398,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
+        guard lhs != 0 else {
+            lhs = rhs
+            return
+        }
+        guard rhs != 0 else {
+            return
+        }
         if lhs._words.count < rhs._words.count {
             lhs._words.reserveCapacity(rhs._words.count)
         }
