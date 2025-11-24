@@ -205,6 +205,9 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
+        if lhs._words.count < rhs._words.count {
+            lhs._words.reserveCapacity(rhs._words.count)
+        }
         var carry = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
@@ -238,6 +241,9 @@ extension Integer: BinaryInteger {
     public static func -= (lhs: inout Integer, rhs: Integer) {
         guard rhs != 0 else {
             return
+        }
+        if lhs._words.count < rhs._words.count {
+            lhs._words.reserveCapacity(rhs._words.count)
         }
         var borrow = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
