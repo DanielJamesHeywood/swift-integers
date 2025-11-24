@@ -400,8 +400,20 @@ extension Integer: BinaryInteger {
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             lhs._words[index] ^= rhWord
         }
-        if lhs._words.count > rhs._words.count {}
-        if lhs._words.count < rhs._words.count {}
+        if lhs._words.count > rhs._words.count && rhsIsNegative {
+            for index in lhs._words.indices.suffix(from: rhs._words.endIndex) {
+                lhs._words[index] = ~lhs._words[index]
+            }
+        }
+        if lhs._words.count < rhs._words.count {
+            if lhsIsNegative {
+                for rhWord in rhs._words.suffix(from: lhs._words.endIndex) {
+                    lhs._words.append(~rhWord)
+                }
+            } else {
+                lhs._words.append(contentsOf: rhs._words.suffix(from: lhs._words.endIndex))
+            }
+        }
         lhs._normalize()
     }
     
