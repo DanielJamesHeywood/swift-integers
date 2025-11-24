@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "swift-integers",
-    platforms: [.macOS("15.0"), .iOS("18.0"), .watchOS("11.0"), .tvOS("18.0"), .visionOS("2.0")],
+    platforms: [.macOS("14.4"), .iOS("17.4"), .watchOS("10.4"), .tvOS("17.4"), .visionOS("1.1")],
     products: [.library(name: "Integers", targets: ["Integers"])],
     targets: [.target(name: "Integers")]
 )
