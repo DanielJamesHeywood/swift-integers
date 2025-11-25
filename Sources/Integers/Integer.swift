@@ -453,6 +453,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
+        guard rhs >= 0 else { return lhs << rhs.magnitude }
         fatalError()
     }
     
@@ -463,6 +464,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
+        guard rhs >= 0 else { return lhs >> rhs.magnitude }
         fatalError()
     }
     
