@@ -706,6 +706,16 @@ extension FixedWidthInteger {
         let (partialValue, overflow) = subtractingReportingOverflow(rhs)
         return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
     }
+    
+    @inlinable
+    internal func _shiftingLeftFullWidth<Other: BinaryInteger>(by other: Other) -> (high: Self, low: Magnitude) {
+        fatalError()
+    }
+    
+    @inlinable
+    internal func _shiftingRightFullWidth<Other: BinaryInteger>(by other: Other) -> (high: Self, low: Magnitude) {
+        fatalError()
+    }
 }
 
 extension Collection {
