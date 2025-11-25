@@ -460,6 +460,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func >>= <RHS: BinaryInteger>(lhs: inout Integer, rhs: RHS) {
+        guard rhs >= 0 else {
+            lhs <<= rhs.magnitude
+            return
+        }
+        guard rhs != 0 else {
+            return
+        }
         fatalError()
     }
     
@@ -472,6 +479,13 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func <<= <RHS: BinaryInteger>(lhs: inout Integer, rhs: RHS) {
+        guard rhs >= 0 else {
+            lhs >>= rhs.magnitude
+            return
+        }
+        guard rhs != 0 else {
+            return
+        }
         fatalError()
     }
     
