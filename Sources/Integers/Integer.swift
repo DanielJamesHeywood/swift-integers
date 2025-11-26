@@ -455,7 +455,14 @@ extension Integer: BinaryInteger {
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs << rhs.magnitude }
         guard rhs != 0 else { return lhs }
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: 0,
+                initializingWith: { buffer, initializedCount in
+                    fatalError()
+                }
+            )
+        )
     }
     
     @inlinable
@@ -474,7 +481,14 @@ extension Integer: BinaryInteger {
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs >> rhs.magnitude }
         guard rhs != 0 else { return lhs }
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: 0,
+                initializingWith: { buffer, initializedCount in
+                    fatalError()
+                }
+            )
+        )
     }
     
     @inlinable
