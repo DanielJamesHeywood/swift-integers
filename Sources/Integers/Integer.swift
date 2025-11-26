@@ -189,6 +189,22 @@ extension Integer: BinaryInteger {
                         buffer.initializeElement(at: index, to: partialValue)
                         carry = overflow
                     }
+                    if lhs._words.count > rhs._words.count {
+                        let rhWord = rhs._isNegative ? UInt.max : UInt.min
+                        for (index, lhWord) in lhs._words.suffix(from: rhs._words.endIndex)._enumeratedWithIndices() {
+                            let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+                            buffer.initializeElement(at: index, to: partialValue)
+                            carry = overflow
+                        }
+                    }
+                    if lhs._words.count < rhs._words.count {
+                        let lhWord = lhs._isNegative ? UInt.max : UInt.min
+                        for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+                            let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+                            buffer.initializeElement(at: index, to: partialValue)
+                            carry = overflow
+                        }
+                    }
                     fatalError()
                 }
             )
@@ -229,6 +245,22 @@ extension Integer: BinaryInteger {
                         let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
                         buffer.initializeElement(at: index, to: partialValue)
                         borrow = overflow
+                    }
+                    if lhs._words.count > rhs._words.count {
+                        let rhWord = rhs._isNegative ? UInt.max : UInt.min
+                        for (index, lhWord) in lhs._words.suffix(from: rhs._words.endIndex)._enumeratedWithIndices() {
+                            let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+                            buffer.initializeElement(at: index, to: partialValue)
+                            borrow = overflow
+                        }
+                    }
+                    if lhs._words.count < rhs._words.count {
+                        let lhWord = lhs._isNegative ? UInt.max : UInt.min
+                        for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+                            let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+                            buffer.initializeElement(at: index, to: partialValue)
+                            borrow = overflow
+                        }
                     }
                     fatalError()
                 }
