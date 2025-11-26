@@ -462,17 +462,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs << rhs.magnitude }
-        guard rhs != 0 else { return lhs }
-        let wordCount = 0
-        return Integer(
-            _words: Array(
-                unsafeUninitializedCapacity: wordCount,
-                initializingWith: { buffer, initializedCount in
-                    initializedCount = wordCount
-                    fatalError()
-                }
-            )
-        )
+        fatalError()
     }
     
     @inlinable
@@ -481,35 +471,19 @@ extension Integer: BinaryInteger {
             lhs <<= rhs.magnitude
             return
         }
-        guard rhs != 0 else {
-            return
-        }
         fatalError()
     }
     
     @inlinable
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs >> rhs.magnitude }
-        guard rhs != 0 else { return lhs }
-        let wordCount = 0
-        return Integer(
-            _words: Array(
-                unsafeUninitializedCapacity: wordCount,
-                initializingWith: { buffer, initializedCount in
-                    initializedCount = wordCount
-                    fatalError()
-                }
-            )
-        )
+        fatalError()
     }
     
     @inlinable
     public static func <<= <RHS: BinaryInteger>(lhs: inout Integer, rhs: RHS) {
         guard rhs >= 0 else {
             lhs >>= rhs.magnitude
-            return
-        }
-        guard rhs != 0 else {
             return
         }
         fatalError()
@@ -749,16 +723,6 @@ extension FixedWidthInteger {
         guard borrowing else { return subtractingReportingOverflow(rhs) }
         let (partialValue, overflow) = subtractingReportingOverflow(rhs)
         return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
-    }
-    
-    @inlinable
-    internal func _shiftingLeftFullWidth<Other: BinaryInteger>(by other: Other) -> (high: Self, low: Magnitude) {
-        fatalError()
-    }
-    
-    @inlinable
-    internal func _shiftingRightFullWidth<Other: BinaryInteger>(by other: Other) -> (high: Self, low: Magnitude) {
-        fatalError()
     }
 }
 
