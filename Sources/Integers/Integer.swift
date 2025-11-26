@@ -181,7 +181,7 @@ extension Integer: BinaryInteger {
         let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: wordCount + 1,
+                unsafeUninitializedCapacity: wordCount,
                 initializingWith: { buffer, initializedCount in
                     var carry = false
                     for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
@@ -392,10 +392,9 @@ extension Integer: BinaryInteger {
     public static func ^ (lhs: Integer, rhs: Integer) -> Integer {
         guard lhs != 0 else { return rhs }
         guard rhs != 0 else { return lhs }
-        let wordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: wordCount,
+                unsafeUninitializedCapacity: Swift.max(lhs._words.count, rhs._words.count),
                 initializingWith: { buffer, initializedCount in
                     for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
                         buffer.initializeElement(at: index, to: lhWord ^ rhWord)
@@ -420,7 +419,7 @@ extension Integer: BinaryInteger {
                             buffer._initializeElements(startingAt: lhs._words.endIndex, toContentsOf: rhRemainingWords)
                         }
                     }
-                    initializedCount = wordCount
+                    initializedCount = buffer.count
                 }
             )
         )
