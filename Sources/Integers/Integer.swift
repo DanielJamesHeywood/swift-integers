@@ -14,28 +14,28 @@ public struct Integer {
     
     @inlinable
     internal mutating func _normalize() {
-        if _words.last.unsafelyUnwrapped == .min {
+        if _words.last.unsafelyUnwrapped == UInt.min {
             repeat {
                 _words.removeLast()
-            } while _words.last == .min
+            } while _words.last == UInt.min
             if let lastWord = _words.last {
                 if lastWord.leadingZeroBitCount == 0 {
-                    _words.append(.min)
+                    _words.append(UInt.min)
                 }
             } else {
-                _words = [.min]
+                _words = [UInt.min]
             }
         }
-        if _words.last.unsafelyUnwrapped == .max {
+        if _words.last.unsafelyUnwrapped == UInt.max {
             repeat {
                 _words.removeLast()
-            } while _words.last == .max
+            } while _words.last == UInt.max
             if let lastWord = _words.last {
                 if lastWord.leadingZeroBitCount != 0 {
-                    _words.append(.max)
+                    _words.append(UInt.max)
                 }
             } else {
-                _words = [.max]
+                _words = [UInt.max]
             }
         }
     }
