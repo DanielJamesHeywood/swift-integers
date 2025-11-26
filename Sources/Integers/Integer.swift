@@ -231,7 +231,29 @@ extension Integer: BinaryInteger {
             lhs._words[index] = partialValue
             carry = overflow
         }
-        fatalError()
+        if lhs._words.count > rhs._words.count {
+            let rhWord = rhsIsNegative ? UInt.max : UInt.min
+            for index in lhs._words.indices.suffix(from: rhs._words.endIndex) {
+                let (partialValue, overflow) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
+                lhs._words[index] = partialValue
+                carry = overflow
+            }
+        }
+        if lhs._words.count < rhs._words.count {
+            let lhWord = lhsIsNegative ? UInt.max : UInt.min
+            for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+                let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
+                lhs._words[index] = partialValue
+                carry = overflow
+            }
+        }
+        if !lhsIsNegative && !rhsIsNegative {
+            lhs._words.append(UInt.min)
+        }
+        if lhsIsNegative && rhsIsNegative {
+            lhs._words.append(UInt.max)
+        }
+        lhs._normalize()
     }
     
     @inlinable
@@ -282,7 +304,29 @@ extension Integer: BinaryInteger {
             lhs._words[index] = partialValue
             borrow = overflow
         }
-        fatalError()
+        if lhs._words.count > rhs._words.count {
+            let rhWord = rhsIsNegative ? UInt.max : UInt.min
+            for index in lhs._words.indices.suffix(from: rhs._words.endIndex) {
+                let (partialValue, overflow) = lhs._words[index]._subtractingReportingOverflow(rhWord, borrowing: borrow)
+                lhs._words[index] = partialValue
+                borrow = overflow
+            }
+        }
+        if lhs._words.count < rhs._words.count {
+            let lhWord = lhsIsNegative ? UInt.max : UInt.min
+            for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+                let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
+                lhs._words[index] = partialValue
+                borrow = overflow
+            }
+        }
+        if !lhsIsNegative && rhsIsNegative {
+            lhs._words.append(UInt.min)
+        }
+        if lhsIsNegative && !rhsIsNegative {
+            lhs._words.append(UInt.max)
+        }
+        lhs._normalize()
     }
     
     @inlinable
