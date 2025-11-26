@@ -285,12 +285,16 @@ extension Integer: BinaryInteger {
                         buffer.initializeElement(at: index, to: lhWord & rhWord)
                     }
                     if lhs._words.count > rhs._words.count && rhs._isNegative {
-                        let lhRemainingWords = lhs._words.suffix(from: rhs._words.endIndex)
-                        buffer._initializeElements(startingAt: rhs._words.endIndex, toContentsOf: lhRemainingWords)
+                        buffer._initializeElements(
+                            startingAt: rhs._words.endIndex,
+                            toContentsOf: lhs._words.suffix(from: rhs._words.endIndex)
+                        )
                     }
                     if lhs._words.count < rhs._words.count && lhs._isNegative {
-                        let rhRemainingWords = rhs._words.suffix(from: lhs._words.endIndex)
-                        buffer._initializeElements(startingAt: lhs._words.endIndex, toContentsOf: rhRemainingWords)
+                        buffer._initializeElements(
+                            startingAt: lhs._words.endIndex,
+                            toContentsOf: rhs._words.suffix(from: lhs._words.endIndex)
+                        )
                     }
                     initializedCount = wordCount
                 }
@@ -342,12 +346,16 @@ extension Integer: BinaryInteger {
                         buffer.initializeElement(at: index, to: lhWord | rhWord)
                     }
                     if lhs._words.count > rhs._words.count && !rhs._isNegative {
-                        let lhRemainingWords = lhs._words.suffix(from: rhs._words.endIndex)
-                        buffer._initializeElements(startingAt: rhs._words.endIndex, toContentsOf: lhRemainingWords)
+                        buffer._initializeElements(
+                            startingAt: rhs._words.endIndex,
+                            toContentsOf: lhs._words.suffix(from: rhs._words.endIndex)
+                        )
                     }
                     if lhs._words.count < rhs._words.count && !lhs._isNegative {
-                        let rhRemainingWords = rhs._words.suffix(from: lhs._words.endIndex)
-                        buffer._initializeElements(startingAt: lhs._words.endIndex, toContentsOf: rhRemainingWords)
+                        buffer._initializeElements(
+                            startingAt: lhs._words.endIndex,
+                            toContentsOf: rhs._words.suffix(from: lhs._words.endIndex)
+                        )
                     }
                     initializedCount = wordCount
                 }
