@@ -89,6 +89,7 @@ extension Integer: SignedNumeric {
         if isNegative {
             _words.append(UInt.max)
         }
+        _normalize()
     }
 }
 
