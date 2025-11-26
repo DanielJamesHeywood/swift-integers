@@ -81,7 +81,7 @@ extension Integer: SignedNumeric {
         }
         var borrow = false
         for index in _words.indices {
-            let (partialValue, overflow) = (0 as UInt)._subtractingReportingOverflow(_words[index], borrowing: borrow)
+            let (partialValue, overflow) = UInt.min._subtractingReportingOverflow(_words[index], borrowing: borrow)
             _words[index] = partialValue
             borrow = overflow
         }
