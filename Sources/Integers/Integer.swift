@@ -76,6 +76,7 @@ extension Integer: SignedNumeric {
     
     @inlinable
     public mutating func negate() {
+        let isNegative = _isNegative
         guard !_isZero else {
             return
         }
@@ -85,7 +86,9 @@ extension Integer: SignedNumeric {
             _words[index] = partialValue
             borrow = overflow
         }
-        fatalError()
+        if isNegative {
+            _words.append(UInt.max)
+        }
     }
 }
 
