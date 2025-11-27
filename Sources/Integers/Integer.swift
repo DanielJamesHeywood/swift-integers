@@ -185,13 +185,10 @@ extension Integer: BinaryInteger {
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
         guard lhs != 0 else { return rhs }
         guard rhs != 0 else { return lhs }
-        var wordCount = Swift.max(lhs._words.count, rhs._words.count)
-        if lhs._isNegative == rhs._isNegative {
-            wordCount += 1
-        }
+        let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: wordCount,
+                unsafeUninitializedCapacity: lhs._isNegative != rhs._isNegative ? maxWordCount : maxWordCount + 1,
                 initializingWith: { buffer, initializedCount in
                     var carry = false
                     for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
@@ -216,10 +213,10 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if !lhs._isNegative && !rhs._isNegative {
-                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.min)
+                        buffer.initializeElement(at: maxWordCount, to: UInt.min)
                     }
                     if lhs._isNegative && rhs._isNegative {
-                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.max)
+                        buffer.initializeElement(at: maxWordCount, to: UInt.max)
                     }
                     initializedCount = buffer.count
                 }
@@ -277,13 +274,10 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
         guard rhs != 0 else { return lhs }
-        var wordCount = Swift.max(lhs._words.count, rhs._words.count)
-        if lhs._isNegative != rhs._isNegative {
-            wordCount += 1
-        }
+        let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: wordCount,
+                unsafeUninitializedCapacity: lhs._isNegative == rhs._isNegative ? maxWordCount : maxWordCount + 1,
                 initializingWith: { buffer, initializedCount in
                     var borrow = false
                     for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
@@ -308,10 +302,10 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if !lhs._isNegative && rhs._isNegative {
-                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.min)
+                        buffer.initializeElement(at: maxWordCount, to: UInt.min)
                     }
                     if lhs._isNegative && !rhs._isNegative {
-                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.max)
+                        buffer.initializeElement(at: maxWordCount, to: UInt.max)
                     }
                     initializedCount = buffer.count
                 }
