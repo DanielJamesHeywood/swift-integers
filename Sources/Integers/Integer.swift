@@ -215,8 +215,13 @@ extension Integer: BinaryInteger {
                             carry = overflow
                         }
                     }
+                    if !lhs._isNegative && !rhs._isNegative {
+                        fatalError()
+                    }
+                    if lhs._isNegative && rhs._isNegative {
+                        fatalError()
+                    }
                     initializedCount = buffer.count
-                    fatalError()
                 }
             )
         )
@@ -296,8 +301,13 @@ extension Integer: BinaryInteger {
                             borrow = overflow
                         }
                     }
+                    if !lhs._isNegative && rhs._isNegative {
+                        fatalError()
+                    }
+                    if lhs._isNegative && !rhs._isNegative {
+                        fatalError()
+                    }
                     initializedCount = buffer.count
-                    fatalError()
                 }
             )
         )
