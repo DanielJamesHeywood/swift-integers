@@ -185,7 +185,10 @@ extension Integer: BinaryInteger {
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
         guard lhs != 0 else { return rhs }
         guard rhs != 0 else { return lhs }
-        let wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        var wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        if lhs._isNegative == rhs._isNegative {
+            wordCount += 1
+        }
         return Integer(
             _words: Array(
                 unsafeUninitializedCapacity: wordCount,
@@ -262,10 +265,13 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
         guard rhs != 0 else { return lhs }
-        let wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        var wordCount = Swift.max(lhs._words.count, rhs._words.count)
+        if lhs._isNegative == rhs._isNegative {
+            wordCount += 1
+        }
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: wordCount + 1,
+                unsafeUninitializedCapacity: wordCount,
                 initializingWith: { buffer, initializedCount in
                     var borrow = false
                     for (index, (lhWord, rhWord)) in zip(lhs._words, rhs._words).enumerated() {
