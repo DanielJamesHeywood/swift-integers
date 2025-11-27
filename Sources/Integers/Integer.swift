@@ -237,6 +237,12 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
+        if lhs._words.count < rhs._words.count {
+            lhs._words.reserveCapacity(rhs._words.count)
+        }
+        if lhs._isNegative == rhs._isNegative {
+            lhs._words.reserveCapacity(Swift.max(lhs._words.count, rhs._words.count) + 1)
+        }
         var carry = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
             let (partialValue, overflow) = lhs._words[index]._addingReportingOverflow(rhWord, carrying: carry)
@@ -318,6 +324,12 @@ extension Integer: BinaryInteger {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
         guard rhs != 0 else {
             return
+        }
+        if lhs._words.count < rhs._words.count {
+            lhs._words.reserveCapacity(rhs._words.count)
+        }
+        if lhs._isNegative != rhs._isNegative {
+            lhs._words.reserveCapacity(Swift.max(lhs._words.count, rhs._words.count) + 1)
         }
         var borrow = false
         for (index, rhWord) in rhs._words.prefix(lhs._words.count)._enumeratedWithIndices() {
