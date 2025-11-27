@@ -244,9 +244,9 @@ extension Integer: BinaryInteger {
         }
         if lhs._words.count < rhs._words.count {
             let lhWord = lhsIsNegative ? UInt.max : UInt.min
-            for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+            for rhWord in rhs._words.suffix(from: lhs._words.endIndex) {
                 let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
-                lhs._words[index] = partialValue
+                lhs._words.append(partialValue)
                 carry = overflow
             }
         }
@@ -317,9 +317,9 @@ extension Integer: BinaryInteger {
         }
         if lhs._words.count < rhs._words.count {
             let lhWord = lhsIsNegative ? UInt.max : UInt.min
-            for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
+            for rhWord in rhs._words.suffix(from: lhs._words.endIndex) {
                 let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
-                lhs._words[index] = partialValue
+                lhs._words.append(partialValue)
                 borrow = overflow
             }
         }
