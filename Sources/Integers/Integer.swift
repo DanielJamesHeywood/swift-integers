@@ -372,7 +372,7 @@ extension Integer: BinaryInteger {
                             toContentsOf: rhs._words.suffix(from: lhs._words.endIndex)
                         )
                     }
-                    initializedCount = wordCount
+                    initializedCount = buffer.count
                 }
             )
         )
@@ -430,7 +430,7 @@ extension Integer: BinaryInteger {
                             toContentsOf: rhs._words.suffix(from: lhs._words.endIndex)
                         )
                     }
-                    initializedCount = wordCount
+                    initializedCount = buffer.count
                 }
             )
         )
