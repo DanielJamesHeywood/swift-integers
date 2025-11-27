@@ -266,7 +266,7 @@ extension Integer: BinaryInteger {
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
         guard rhs != 0 else { return lhs }
         var wordCount = Swift.max(lhs._words.count, rhs._words.count)
-        if lhs._isNegative == rhs._isNegative {
+        if lhs._isNegative != rhs._isNegative {
             wordCount += 1
         }
         return Integer(
