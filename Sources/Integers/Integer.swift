@@ -215,6 +215,7 @@ extension Integer: BinaryInteger {
                             carry = overflow
                         }
                     }
+                    initializedCount = buffer.count
                     fatalError()
                 }
             )
@@ -295,6 +296,7 @@ extension Integer: BinaryInteger {
                             borrow = overflow
                         }
                     }
+                    initializedCount = buffer.count
                     fatalError()
                 }
             )
