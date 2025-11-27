@@ -216,10 +216,10 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if !lhs._isNegative && !rhs._isNegative {
-                        fatalError()
+                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.min)
                     }
                     if lhs._isNegative && rhs._isNegative {
-                        fatalError()
+                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.max)
                     }
                     initializedCount = buffer.count
                 }
@@ -308,10 +308,10 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if !lhs._isNegative && rhs._isNegative {
-                        fatalError()
+                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.min)
                     }
                     if lhs._isNegative && !rhs._isNegative {
-                        fatalError()
+                        buffer.initializeElement(at: Swift.max(lhs._words.count, rhs._words.count), to: UInt.max)
                     }
                     initializedCount = buffer.count
                 }
