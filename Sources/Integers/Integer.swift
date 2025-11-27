@@ -80,6 +80,9 @@ extension Integer: SignedNumeric {
         guard !_isZero else {
             return
         }
+        if isNegative {
+            _words.reserveCapacity(_words.count + 1)
+        }
         var borrow = false
         for index in _words.indices {
             let (partialValue, overflow) = UInt.min._subtractingReportingOverflow(_words[index], borrowing: borrow)
