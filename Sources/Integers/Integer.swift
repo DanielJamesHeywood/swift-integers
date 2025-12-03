@@ -887,6 +887,12 @@ extension UnsafeMutableBufferPointer {
         precondition(startIndex <= index && index + source.count <= endIndex)
         _ = suffix(from: index).initialize(fromContentsOf: source)
     }
+    
+    @inlinable
+    internal func _initializeElements(startingAt index: Index, repeating repeatedValue: Element, count: Int) {
+        precondition(startIndex <= index && index + count <= endIndex)
+        suffix(from: index).prefix(count).initialize(repeating: repeatedValue)
+    }
 }
 
 extension BinaryInteger {
