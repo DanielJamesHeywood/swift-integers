@@ -225,7 +225,7 @@ extension Integer: BinaryInteger {
                         carry = overflow
                     }
                     if lhs._words.count > rhs._words.count {
-                        let rhWord = rhs._isNegative ? UInt.max : UInt.min
+                        let rhWord = rhs._signExtendingWord
                         for (index, lhWord) in lhs._words.suffix(from: rhs._words.endIndex)._enumeratedWithIndices() {
                             let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
                             buffer.initializeElement(at: index, to: partialValue)
@@ -233,7 +233,7 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if lhs._words.count < rhs._words.count {
-                        let lhWord = lhs._isNegative ? UInt.max : UInt.min
+                        let lhWord = lhs._signExtendingWord
                         for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
                             let (partialValue, overflow) = lhWord._addingReportingOverflow(rhWord, carrying: carry)
                             buffer.initializeElement(at: index, to: partialValue)
@@ -314,7 +314,7 @@ extension Integer: BinaryInteger {
                         borrow = overflow
                     }
                     if lhs._words.count > rhs._words.count {
-                        let rhWord = rhs._isNegative ? UInt.max : UInt.min
+                        let rhWord = rhs._signExtendingWord
                         for (index, lhWord) in lhs._words.suffix(from: rhs._words.endIndex)._enumeratedWithIndices() {
                             let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
                             buffer.initializeElement(at: index, to: partialValue)
@@ -322,7 +322,7 @@ extension Integer: BinaryInteger {
                         }
                     }
                     if lhs._words.count < rhs._words.count {
-                        let lhWord = lhs._isNegative ? UInt.max : UInt.min
+                        let lhWord = lhs._signExtendingWord
                         for (index, rhWord) in rhs._words.suffix(from: lhs._words.endIndex)._enumeratedWithIndices() {
                             let (partialValue, overflow) = lhWord._subtractingReportingOverflow(rhWord, borrowing: borrow)
                             buffer.initializeElement(at: index, to: partialValue)
