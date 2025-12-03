@@ -54,6 +54,14 @@ extension Integer {
     }
 }
 
+extension Integer {
+    
+    @inlinable
+    internal var _signExtendingWord: UInt {
+        return _isNegative ? UInt.max : UInt.min
+    }
+}
+
 extension Integer: AdditiveArithmetic {
     
     @inlinable
