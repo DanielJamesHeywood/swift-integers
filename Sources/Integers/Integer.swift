@@ -595,6 +595,7 @@ extension Integer: BinaryInteger {
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs << rhs.magnitude }
         guard rhs != 0 else { return lhs }
+        let (quotient, remainder) = Int(rhs).quotientAndRemainder(dividingBy: UInt.bitWidth)
         fatalError()
     }
     
@@ -614,6 +615,7 @@ extension Integer: BinaryInteger {
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs >> rhs.magnitude }
         guard rhs != 0 else { return lhs }
+        let (quotient, remainder) = Int(rhs).quotientAndRemainder(dividingBy: UInt.bitWidth)
         fatalError()
     }
     
