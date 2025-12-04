@@ -675,6 +675,16 @@ extension BinaryFloatingPoint {
     }
 }
 
+extension BinaryInteger {
+    
+    @inlinable
+    internal func _decomposeIntegerShift() -> (wordwiseShift: Self, bitwiseShift: Self) {
+        guard let wordWidth = Self(exactly: UInt.bitWidth) else { return (0, self) }
+        let (quotient, remainder) = quotientAndRemainder(dividingBy: wordWidth)
+        return (quotient, remainder)
+    }
+}
+
 extension Integer: SignedInteger {}
 
 extension Integer: Equatable {
