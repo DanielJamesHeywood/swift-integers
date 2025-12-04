@@ -617,6 +617,7 @@ extension Integer: BinaryInteger {
         guard rhs >= 0 else { return lhs >> rhs.magnitude }
         guard rhs != 0 else { return lhs }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
+        guard wordwiseShift <= lhs._words.count else { return lhs.signum() }
         fatalError()
     }
     
@@ -630,6 +631,10 @@ extension Integer: BinaryInteger {
             return
         }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
+        guard wordwiseShift <= lhs._words.count else {
+            lhs = lhs.signum()
+            return
+        }
         fatalError()
     }
     
