@@ -595,7 +595,7 @@ extension Integer: BinaryInteger {
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs << rhs.magnitude }
         guard rhs != 0 else { return lhs }
-        let (quotient, remainder) = Int(rhs).quotientAndRemainder(dividingBy: UInt.bitWidth)
+        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
         fatalError()
     }
     
@@ -608,6 +608,7 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
+        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
         fatalError()
     }
     
@@ -615,7 +616,7 @@ extension Integer: BinaryInteger {
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
         guard rhs >= 0 else { return lhs >> rhs.magnitude }
         guard rhs != 0 else { return lhs }
-        let (quotient, remainder) = Int(rhs).quotientAndRemainder(dividingBy: UInt.bitWidth)
+        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
         fatalError()
     }
     
@@ -628,6 +629,7 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
+        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
         fatalError()
     }
     
