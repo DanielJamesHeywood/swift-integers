@@ -596,7 +596,7 @@ extension Integer: BinaryInteger {
         guard rhs >= 0 else { return lhs << rhs.magnitude }
         guard rhs != 0 else { return lhs }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard wordwiseShift <= lhs._words.count else { return lhs.signum() }
+        guard wordwiseShift <= lhs._words.count else { return lhs._isNegative ? -1 : 0 }
         fatalError()
     }
     
@@ -611,7 +611,7 @@ extension Integer: BinaryInteger {
         }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
         guard wordwiseShift <= lhs._words.count else {
-            lhs = lhs.signum()
+            lhs = lhs._isNegative ? -1 : 0
             return
         }
         fatalError()
