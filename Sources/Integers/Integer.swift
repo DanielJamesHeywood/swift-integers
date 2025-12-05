@@ -575,7 +575,24 @@ extension Integer: BinaryInteger {
         guard quotient < lhs._words.count else { return lhs._isNegative ? -1 : 0 }
         let wordwiseShift = Int(quotient)
         let bitwiseShift = Int(remainder)
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: lhs._words.count - wordwiseShift,
+                initializingWith: { buffer, initializedCount in
+                    if bitwiseShift != 0 {
+                        let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
+                        for index in buffer.indices {
+                            let lowIndex = index + wordwiseShift, highIndex = lowIndex + 1
+                            let lowWord = lhs._words[lowIndex]
+                            let highWord = highIndex < lhs._words.endIndex ? lhs._words[highIndex] : lhs._signExtendingWord
+                            buffer.initializeElement(at: index, to: lowWord >> bitwiseShift | highWord << inverseBitwiseShift)
+                        }
+                    } else {
+                        buffer._initializeElements(startingAt: 0, toContentsOf: lhs._words.suffix(from: wordwiseShift))
+                    }
+                }
+            )
+        )
     }
     
     @inlinable
@@ -604,7 +621,27 @@ extension Integer: BinaryInteger {
         let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
         guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
         let bitwiseShift = Int(remainder)
-        fatalError()
+        return Integer(
+            _words: Array(
+                unsafeUninitializedCapacity: lhs._words.count + wordwiseShift + (bitwiseShift != 0 ? 1 : 0),
+                initializingWith: { buffer, initializedCount in
+                    if wordwiseShift != 0 {
+                        buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: wordwiseShift)
+                    }
+                    if bitwiseShift != 0 {
+                        let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
+                        for index in buffer.indices.suffix(from: wordwiseShift) {
+                            let lowIndex = index - wordwiseShift - 1, highIndex = index - wordwiseShift
+                            let lowWord = lowIndex >= lhs._words.startIndex ? lhs._words[lowIndex] : UInt.min
+                            let highWord = highIndex < lhs._words.endIndex ? lhs._words[highIndex] : lhs._signExtendingWord
+                            buffer.initializeElement(at: index, to: lowWord >> inverseBitwiseShift | highWord << bitwiseShift)
+                        }
+                    } else {
+                        buffer._initializeElements(startingAt: wordwiseShift, toContentsOf: lhs._words)
+                    }
+                }
+            )
+        )
     }
     
     @inlinable
