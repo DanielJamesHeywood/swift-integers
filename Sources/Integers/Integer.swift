@@ -599,12 +599,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func << <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
-        guard rhs >= 0 else {
-            return lhs >> rhs.magnitude
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard rhs >= 0 else { return lhs >> rhs.magnitude }
+        guard rhs != 0 else { return lhs }
         let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
         guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
         let bitwiseShift = Int(remainder)
