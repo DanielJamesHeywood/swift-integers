@@ -575,9 +575,10 @@ extension Integer: BinaryInteger {
         guard quotient < lhs._words.count else { return lhs._isNegative ? -1 : 0 }
         let wordwiseShift = Int(quotient)
         let bitwiseShift = Int(remainder)
+        let wordCount = lhs._words.count - wordwiseShift
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: lhs._words.count - wordwiseShift,
+                unsafeUninitializedCapacity: wordCount,
                 initializingWith: { buffer, initializedCount in
                     if bitwiseShift != 0 {
                         let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
@@ -621,9 +622,13 @@ extension Integer: BinaryInteger {
         let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
         guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
         let bitwiseShift = Int(remainder)
+        var wordCount = lhs._words.count + wordwiseShift
+        if bitwiseShift != 0 {
+            wordCount += 1
+        }
         return Integer(
             _words: Array(
-                unsafeUninitializedCapacity: lhs._words.count + wordwiseShift + (bitwiseShift != 0 ? 1 : 0),
+                unsafeUninitializedCapacity: wordCount,
                 initializingWith: { buffer, initializedCount in
                     if wordwiseShift != 0 {
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: wordwiseShift)
