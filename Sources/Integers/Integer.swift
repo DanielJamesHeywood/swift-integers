@@ -654,7 +654,9 @@ extension Integer: BinaryInteger {
             return lhs
         }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift) else { preconditionFailure() }
+        guard let wordwiseShift = Int(exactly: wordwiseShift) else {
+            preconditionFailure()
+        }
         fatalError()
     }
     
@@ -668,7 +670,9 @@ extension Integer: BinaryInteger {
             return
         }
         let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift) else { preconditionFailure() }
+        guard let wordwiseShift = Int(exactly: wordwiseShift) else {
+            preconditionFailure()
+        }
         fatalError()
     }
     
