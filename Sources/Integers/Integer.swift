@@ -44,30 +44,22 @@ public struct Integer {
 extension Integer {
     
     @inlinable
-    internal var _isNegative: Bool {
-        return _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0
-    }
+    internal var _isNegative: Bool { _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0 }
     
     @inlinable
-    internal var _isZero: Bool {
-        return _words == [0]
-    }
+    internal var _isZero: Bool { _words == [0] }
 }
 
 extension Integer {
     
     @inlinable
-    internal var _signExtendingWord: UInt {
-        return _isNegative ? UInt.max : UInt.min
-    }
+    internal var _signExtendingWord: UInt { _isNegative ? UInt.max : UInt.min }
 }
 
 extension Integer: AdditiveArithmetic {
     
     @inlinable
-    public static var zero: Integer {
-        return 0
-    }
+    public static var zero: Integer { 0 }
 }
 
 extension Integer: Numeric {
@@ -80,17 +72,13 @@ extension Integer: Numeric {
     public typealias Magnitude = Integer
     
     @inlinable
-    public var magnitude: Integer {
-        return _isNegative ? -self : self
-    }
+    public var magnitude: Integer { _isNegative ? -self : self }
 }
 
 extension Integer: SignedNumeric {
     
     @inlinable
-    public prefix static func - (operand: Integer) -> Integer {
-        return 0 - operand
-    }
+    public prefix static func - (operand: Integer) -> Integer { 0 - operand }
     
     @inlinable
     public mutating func negate() {
@@ -119,28 +107,20 @@ extension Integer: Strideable {
     public typealias Stride = Integer
     
     @inlinable
-    public func distance(to other: Integer) -> Integer {
-        return other - self
-    }
+    public func distance(to other: Integer) -> Integer { other - self }
     
     @inlinable
-    public func advanced(by n: Integer) -> Integer {
-        return self + n
-    }
+    public func advanced(by n: Integer) -> Integer { self + n }
 }
 
 extension Integer: BinaryInteger {
     
     @inlinable
-    public static var isSigned: Bool {
-        return true
-    }
+    public static var isSigned: Bool { true }
     
     @inlinable
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
-        guard let integer = source._convertExactlyToInteger() else {
-            return nil
-        }
+        guard let integer = source._convertExactlyToInteger() else { return nil }
         self = integer
     }
     
@@ -176,20 +156,14 @@ extension Integer: BinaryInteger {
     public typealias Words = [UInt]
     
     @inlinable
-    public var words: [UInt] {
-        return _words
-    }
+    public var words: [UInt] { _words }
     
     @inlinable
-    public var bitWidth: Int {
-        return _words.count * UInt.bitWidth
-    }
+    public var bitWidth: Int { _words.count * UInt.bitWidth }
     
     @inlinable
     public var trailingZeroBitCount: Int {
-        guard let index = _words.firstIndex(where: { word in word != 0 }) else {
-            return UInt.bitWidth
-        }
+        guard let index = _words.firstIndex(where: { word in word != 0 }) else { return UInt.bitWidth }
         return index * UInt.bitWidth + _words[index].trailingZeroBitCount
     }
     
@@ -215,12 +189,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
-            return rhs
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard lhs != 0 else { return rhs }
+        guard rhs != 0 else { return lhs }
         let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -309,9 +279,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard rhs != 0 else { return lhs }
         let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
         return Integer(
             _words: Array(
@@ -405,18 +373,12 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public prefix static func ~ (x: Integer) -> Integer {
-        return x ^ -1
-    }
+    public prefix static func ~ (x: Integer) -> Integer { x ^ -1 }
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0, lhs != -1 else {
-            return rhs
-        }
-        guard lhs != 0, rhs != -1 else {
-            return lhs
-        }
+        guard rhs != 0, lhs != -1 else { return rhs }
+        guard lhs != 0, rhs != -1 else { return lhs }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
         if lhs._words.count > rhs._words.count && rhs._isNegative {
             wordCount = lhs._words.count
@@ -476,12 +438,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func | (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0, rhs != -1 else {
-            return rhs
-        }
-        guard rhs != 0, lhs != -1 else {
-            return lhs
-        }
+        guard lhs != 0, rhs != -1 else { return rhs }
+        guard rhs != 0, lhs != -1 else { return lhs }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
         if lhs._words.count > rhs._words.count && !rhs._isNegative {
             wordCount = lhs._words.count
@@ -541,12 +499,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^ (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
-            return rhs
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
+        guard lhs != 0 else { return rhs }
+        guard rhs != 0 else { return lhs }
         return Integer(
             _words: Array(
                 unsafeUninitializedCapacity: Swift.max(lhs._words.count, rhs._words.count),
@@ -615,16 +569,12 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func >> <RHS: BinaryInteger>(lhs: Integer, rhs: RHS) -> Integer {
-        guard rhs >= 0 else {
-            return lhs << rhs.magnitude
-        }
-        guard rhs != 0 else {
-            return lhs
-        }
-        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift), wordwiseShift <= lhs._words.count else {
-            return lhs._isNegative ? -1 : 0
-        }
+        guard rhs >= 0 else { return lhs << rhs.magnitude }
+        guard rhs != 0 else { return lhs }
+        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
+        guard quotient < lhs._words.count else { return lhs._isNegative ? -1 : 0 }
+        let wordwiseShift = Int(quotient)
+        let bitwiseShift = Int(remainder)
         fatalError()
     }
     
@@ -637,11 +587,13 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
-        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift), wordwiseShift <= lhs._words.count else {
+        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
+        guard quotient < lhs._words.count else {
             lhs = lhs._isNegative ? -1 : 0
             return
         }
+        let wordwiseShift = Int(quotient)
+        let bitwiseShift = Int(remainder)
         fatalError()
     }
     
@@ -653,10 +605,9 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return lhs
         }
-        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift) else {
-            preconditionFailure()
-        }
+        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
+        guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
+        let bitwiseShift = Int(remainder)
         fatalError()
     }
     
@@ -669,10 +620,9 @@ extension Integer: BinaryInteger {
         guard rhs != 0 else {
             return
         }
-        let (wordwiseShift, bitwiseShift) = rhs._decomposeIntegerShift()
-        guard let wordwiseShift = Int(exactly: wordwiseShift) else {
-            preconditionFailure()
-        }
+        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
+        guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
+        let bitwiseShift = Int(remainder)
         fatalError()
     }
     
@@ -687,24 +637,16 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public func signum() -> Integer {
-        return _isNegative ? -1 : _isZero ? 0 : 1
-    }
+    public func signum() -> Integer { _isNegative ? -1 : _isZero ? 0 : 1 }
 }
 
 extension BinaryFloatingPoint {
     
     @inlinable
     internal func _convertExactlyToInteger() -> Integer? {
-        guard isFinite else {
-            return nil
-        }
-        guard !isZero else {
-            return 0
-        }
-        guard significandWidth <= exponent else {
-            return nil
-        }
+        guard isFinite else { return nil }
+        guard !isZero else { return 0 }
+        guard significandWidth <= exponent else { return nil }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
         var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
         if isLess(than: 0) {
@@ -716,9 +658,7 @@ extension BinaryFloatingPoint {
     @inlinable
     internal func _convertToInteger() -> Integer {
         precondition(isFinite)
-        guard !isZero else {
-            return 0
-        }
+        guard !isZero else { return 0 }
         let significandExponent = exponent - Exponent(significandWidth &+ significandBitPattern.trailingZeroBitCount)
         var integer = 1 << exponent | Integer(significandBitPattern) << significandExponent
         if isLess(than: 0) {
@@ -728,49 +668,27 @@ extension BinaryFloatingPoint {
     }
 }
 
-extension BinaryInteger {
-    
-    @inlinable
-    internal func _decomposeIntegerShift() -> (wordwiseShift: Self, bitwiseShift: Self) {
-        guard let wordWidth = Self(exactly: UInt.bitWidth) else {
-            return (0, self)
-        }
-        let (quotient, remainder) = quotientAndRemainder(dividingBy: wordWidth)
-        return (quotient, remainder)
-    }
-}
-
 extension Integer: SignedInteger {}
 
 extension Integer: Equatable {
     
     @inlinable
-    public static func == (lhs: Integer, rhs: Integer) -> Bool {
-        return lhs._words == rhs._words
-    }
+    public static func == (lhs: Integer, rhs: Integer) -> Bool { lhs._words == rhs._words }
 }
 
 extension Integer: Comparable {
     
     @inlinable
-    public static func < (lhs: Integer, rhs: Integer) -> Bool {
-        return lhs._compare(to: rhs) == .lessThan
-    }
+    public static func < (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) == .lessThan }
     
     @inlinable
-    public static func <= (lhs: Integer, rhs: Integer) -> Bool {
-        return lhs._compare(to: rhs) != .greaterThan
-    }
+    public static func <= (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) != .greaterThan }
     
     @inlinable
-    public static func >= (lhs: Integer, rhs: Integer) -> Bool {
-        return lhs._compare(to: rhs) != .lessThan
-    }
+    public static func >= (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) != .lessThan }
     
     @inlinable
-    public static func > (lhs: Integer, rhs: Integer) -> Bool {
-        return lhs._compare(to: rhs) == .greaterThan
-    }
+    public static func > (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) == .greaterThan }
 }
 
 extension Integer {
@@ -786,33 +704,23 @@ extension Integer {
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
-        case (false, false):
-            return _unsignedCompare(to: other)
-        case (false, true):
-            return .greaterThan
-        case (true, false):
-            return .lessThan
+        case (false, false): return _unsignedCompare(to: other)
+        case (false, true): return .greaterThan
+        case (true, false): return .lessThan
         case (true, true):
             switch _unsignedCompare(to: other) {
-            case .lessThan:
-                return .greaterThan
-            case .greaterThan:
-                return .lessThan
-            case .equalTo:
-                return .equalTo
+            case .lessThan: return .greaterThan
+            case .greaterThan: return .lessThan
+            case .equalTo: return .equalTo
             }
         }
     }
     
     @inlinable
     internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
-        guard _words.count == other._words.count else {
-            return _words.count < other._words.count ? .lessThan : .greaterThan
-        }
+        guard _words.count == other._words.count else { return _words.count < other._words.count ? .lessThan : .greaterThan }
         for (word, otherWord) in zip(_words.reversed(), other._words.reversed()) {
-            guard word == otherWord else {
-                return word < otherWord ? .lessThan : .greaterThan
-            }
+            guard word == otherWord else { return word < otherWord ? .lessThan : .greaterThan }
         }
         return .equalTo
     }
@@ -854,38 +762,27 @@ extension Integer: LosslessStringConvertible {
     public init?(_ description: String) {
         var description = description
         let integer = description.withUTF8 { codeUnits in _parseInteger(from: codeUnits) }
-        guard let integer else {
-            return nil
-        }
+        guard let integer else { return nil }
         self = integer
     }
 }
 
 @inlinable
 internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integer? {
-    guard !codeUnits.isEmpty else {
-        return nil
-    }
+    guard !codeUnits.isEmpty else { return nil }
     switch codeUnits[0] {
-    case UInt8(ascii: "-"):
-        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
-    case UInt8(ascii: "+"):
-        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
-    default:
-        return _parseIntegerDigits(from: codeUnits)
+    case UInt8(ascii: "-"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
+    case UInt8(ascii: "+"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
+    default: return _parseIntegerDigits(from: codeUnits)
     }
 }
 
 @inlinable
 internal func _parseIntegerDigits(from codeUnits: UnsafeBufferPointer<UInt8>, isNegative: Bool = false) -> Integer? {
-    guard !codeUnits.isEmpty else {
-        return nil
-    }
+    guard !codeUnits.isEmpty else { return nil }
     var integer = 0 as Integer
     for codeUnit in codeUnits {
-        guard UInt8(ascii: "0")...UInt8(ascii: "9") ~= codeUnit else {
-            return nil
-        }
+        guard UInt8(ascii: "0")...UInt8(ascii: "9") ~= codeUnit else { return nil }
         integer *= 10
         integer += Integer(codeUnit &- UInt8(ascii: "0"))
     }
@@ -944,9 +841,7 @@ extension Integer: ExpressibleByIntegerLiteral {
 extension Integer: CustomReflectable {
     
     @inlinable
-    public var customMirror: Mirror {
-        return Mirror(self, children: EmptyCollection())
-    }
+    public var customMirror: Mirror { Mirror(self, children: EmptyCollection()) }
 }
 
 extension Integer: @unchecked Sendable {}
@@ -955,18 +850,14 @@ extension FixedWidthInteger {
     
     @inlinable
     internal func _addingReportingOverflow(_ rhs: Self, carrying: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard carrying else {
-            return addingReportingOverflow(rhs)
-        }
+        guard carrying else { return addingReportingOverflow(rhs) }
         let (partialValue, overflow) = addingReportingOverflow(rhs)
         return overflow ? (partialValue &+ 1, true) : partialValue.addingReportingOverflow(1)
     }
     
     @inlinable
     internal func _subtractingReportingOverflow(_ rhs: Self, borrowing: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard borrowing else {
-            return subtractingReportingOverflow(rhs)
-        }
+        guard borrowing else { return subtractingReportingOverflow(rhs) }
         let (partialValue, overflow) = subtractingReportingOverflow(rhs)
         return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
     }
@@ -975,9 +866,7 @@ extension FixedWidthInteger {
 extension Collection {
     
     @inlinable
-    internal func _enumeratedWithIndices() -> Zip2Sequence<Indices, Self> {
-        return zip(indices, self)
-    }
+    internal func _enumeratedWithIndices() -> Zip2Sequence<Indices, Self> { zip(indices, self) }
 }
 
 extension UnsafeMutableBufferPointer {
