@@ -364,7 +364,11 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func * (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
+        var integer = lhs.magnitude._multipliedUnsigned(by: rhs.magnitude)
+        if lhs._isNegative != rhs._isNegative {
+            integer.negate()
+        }
+        return integer
     }
     
     @inlinable
