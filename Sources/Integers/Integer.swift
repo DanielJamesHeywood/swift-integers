@@ -711,6 +711,14 @@ extension BinaryFloatingPoint {
     }
 }
 
+extension Integer {
+    
+    @inlinable
+    internal func _multipliedUnsigned(by other: Integer) -> Integer {
+        fatalError()
+    }
+}
+
 extension Integer: SignedInteger {}
 
 extension Integer: Equatable {
