@@ -582,12 +582,14 @@ extension Integer: BinaryInteger {
                 initializingWith: { buffer, initializedCount in
                     if bitwiseShift != 0 {
                         let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
-                        for index in buffer.indices {
-                            let lowIndex = index + wordwiseShift, highIndex = lowIndex + 1
-                            let lowWord = lhs._words[lowIndex]
-                            let highWord = highIndex < lhs._words.endIndex ? lhs._words[highIndex] : lhs._signExtendingWord
+                        for index in buffer.indices.dropLast() {
+                            let lowWord = lhs._words[index + wordwiseShift], highWord = lhs._words[index + wordwiseShift + 1]
                             buffer.initializeElement(at: index, to: lowWord >> bitwiseShift | highWord << inverseBitwiseShift)
                         }
+                        buffer.initializeElement(
+                            at: buffer.indices.last.unsafelyUnwrapped,
+                            to: lhs._words.last.unsafelyUnwrapped >> bitwiseShift | lhs._signExtendingWord << inverseBitwiseShift
+                        )
                     } else {
                         buffer._initializeElements(startingAt: 0, toContentsOf: lhs._words.suffix(from: wordwiseShift))
                     }
