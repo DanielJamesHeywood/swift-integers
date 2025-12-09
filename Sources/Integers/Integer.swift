@@ -747,11 +747,11 @@ extension Integer {
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
-        case (false, false): return _unsignedCompare(to: other)
+        case (false, false): return _compareUnsigned(to: other)
         case (false, true): return .greaterThan
         case (true, false): return .lessThan
         case (true, true):
-            switch _unsignedCompare(to: other) {
+            switch _compareUnsigned(to: other) {
             case .lessThan: return .greaterThan
             case .greaterThan: return .lessThan
             case .equalTo: return .equalTo
@@ -760,7 +760,7 @@ extension Integer {
     }
     
     @inlinable
-    internal func _unsignedCompare(to other: Integer) -> _ComparisonResult {
+    internal func _compareUnsigned(to other: Integer) -> _ComparisonResult {
         guard _words.count == other._words.count else { return _words.count < other._words.count ? .lessThan : .greaterThan }
         for (word, otherWord) in zip(_words.reversed(), other._words.reversed()) {
             guard word == otherWord else { return word < otherWord ? .lessThan : .greaterThan }
