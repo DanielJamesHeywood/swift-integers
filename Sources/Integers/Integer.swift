@@ -637,12 +637,15 @@ extension Integer: BinaryInteger {
                     }
                     if bitwiseShift != 0 {
                         let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
-                        for index in buffer.indices.suffix(from: wordwiseShift) {
-                            let lowIndex = index - wordwiseShift - 1, highIndex = index - wordwiseShift
-                            let lowWord = lowIndex >= lhs._words.startIndex ? lhs._words[lowIndex] : UInt.min
-                            let highWord = highIndex < lhs._words.endIndex ? lhs._words[highIndex] : lhs._signExtendingWord
-                            buffer.initializeElement(at: index, to: lowWord >> inverseBitwiseShift | highWord << bitwiseShift)
+                        buffer.initializeElement(at: wordwiseShift, to: lhs._words.first.unsafelyUnwrapped << bitwiseShift)
+                        for index in buffer.indices.suffix(from: wordwiseShift).dropFirst().dropLast() {
+                            let lowWord = lhs._words[index - wordwiseShift - 1], highWord = lhs._words[index - wordwiseShift]
+                            buffer.initializeElement(at: index, to: lowWord >> bitwiseShift | highWord << inverseBitwiseShift)
                         }
+                        buffer.initializeElement(
+                            at: buffer.indices.last.unsafelyUnwrapped,
+                            to: lhs._words.last.unsafelyUnwrapped >> inverseBitwiseShift | lhs._signExtendingWord << bitwiseShift
+                        )
                     } else {
                         buffer._initializeElements(startingAt: wordwiseShift, toContentsOf: lhs._words)
                     }
