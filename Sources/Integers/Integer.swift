@@ -698,9 +698,7 @@ extension Integer {
         let wordCount = _words.count + other._words.count
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
-            guard word != UInt.min else {
-                continue
-            }
+            guard word != UInt.min else { continue }
             integer += Integer(
                 _words: Array(
                     unsafeUninitializedCapacity: wordCount,
