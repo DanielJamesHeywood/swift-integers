@@ -647,7 +647,14 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
-        fatalError()
+        var (quotient, remainder) = magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude)
+        if _isNegative != rhs._isNegative {
+            quotient.negate()
+        }
+        if _isNegative {
+            remainder.negate()
+        }
+        return (quotient, remainder)
     }
     
     @inlinable
