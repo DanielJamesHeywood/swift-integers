@@ -360,6 +360,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func * (lhs: Integer, rhs: Integer) -> Integer {
+        guard rhs != 0, lhs != 1 else { return rhs }
+        guard lhs != 0, rhs != 1 else { return lhs }
         var integer = lhs.magnitude._multipliedUnsigned(by: rhs.magnitude)
         if lhs._isNegative != rhs._isNegative {
             integer.negate()
