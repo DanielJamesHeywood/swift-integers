@@ -704,10 +704,18 @@ extension Integer {
                     unsafeUninitializedCapacity: wordCount,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
+                        var carry = UInt.min
                         for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
                             let (high, low) = word.multipliedFullWidth(by: otherWord)
-                            fatalError()
+                            let (partialValue, overflow) = low.addingReportingOverflow(carry)
+                            buffer.initializeElement(at: index + otherIndex, to: partialValue)
+                            carry = high
+                            if overflow {
+                                carry &+= 1
+                            }
                         }
+                        buffer.initializeElement(at: index + other._words.endIndex, to: carry)
+                        initializedCount = index + other._words.count
                     }
                 )
             )
