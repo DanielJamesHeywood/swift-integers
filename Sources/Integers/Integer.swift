@@ -721,7 +721,14 @@ extension Integer {
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
         var integer = 0 as Integer
         for word in _words {
-            fatalError()
+            integer += Integer(
+                _words: Array(
+                    unsafeUninitializedCapacity: 0,
+                    initializingWith: { buffer, initializedCount in
+                        fatalError()
+                    }
+                )
+            )
         }
         return integer
     }
