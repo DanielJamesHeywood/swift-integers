@@ -593,6 +593,7 @@ extension Integer: BinaryInteger {
                     } else {
                         buffer._initializeElements(startingAt: 0, toContentsOf: lhs._words.suffix(from: wordwiseShift))
                     }
+                    initializedCount = buffer.count
                 }
             )
         )
@@ -635,6 +636,7 @@ extension Integer: BinaryInteger {
                     } else {
                         buffer._initializeElements(startingAt: wordwiseShift, toContentsOf: lhs._words)
                     }
+                    initializedCount = buffer.count
                 }
             )
         )
@@ -739,7 +741,7 @@ extension Integer {
             let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
             let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
             var shift = remainderBitWidth - otherBitWidth
-            if remainder._compareUnsigned(to: other << shift) != .lessThan {
+            if remainder._compareUnsigned(to: other << shift) == .lessThan {
                 shift &-= 1
             }
             quotient += 1 << shift
