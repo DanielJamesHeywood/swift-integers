@@ -373,7 +373,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func *= (lhs: inout Integer, rhs: Integer) {
-        fatalError()
+        lhs = lhs * rhs
     }
     
     @inlinable
