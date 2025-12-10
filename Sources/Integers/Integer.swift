@@ -720,11 +720,12 @@ extension Integer {
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
         var integer = 0 as Integer
-        for word in _words {
+        for (index, word) in _words._enumeratedWithIndices() {
             integer += Integer(
                 _words: Array(
                     unsafeUninitializedCapacity: 0,
                     initializingWith: { buffer, initializedCount in
+                        buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
                         fatalError()
                     }
                 )
