@@ -604,21 +604,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func >>= <RHS: BinaryInteger>(lhs: inout Integer, rhs: RHS) {
-        guard rhs >= 0 else {
-            lhs <<= rhs.magnitude
-            return
-        }
-        guard rhs != 0 else {
-            return
-        }
-        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
-        guard quotient < lhs._words.count else {
-            lhs = lhs._isNegative ? -1 : 0
-            return
-        }
-        let wordwiseShift = Int(quotient)
-        let bitwiseShift = Int(remainder)
-        fatalError()
+        lhs = lhs >> rhs
     }
     
     @inlinable
@@ -660,17 +646,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func <<= <RHS: BinaryInteger>(lhs: inout Integer, rhs: RHS) {
-        guard rhs >= 0 else {
-            lhs >>= rhs.magnitude
-            return
-        }
-        guard rhs != 0 else {
-            return
-        }
-        let (quotient, remainder) = rhs.quotientAndRemainder(dividingBy: RHS(UInt.bitWidth))
-        guard let wordwiseShift = Int(exactly: quotient) else { preconditionFailure() }
-        let bitwiseShift = Int(remainder)
-        fatalError()
+        lhs = lhs << rhs
     }
     
     @inlinable
