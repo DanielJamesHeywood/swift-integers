@@ -709,6 +709,14 @@ extension Integer {
     }
 }
 
+extension Integer {
+    
+    @inlinable
+    internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
+        fatalError()
+    }
+}
+
 extension Integer: SignedInteger {}
 
 extension Integer: Equatable {
