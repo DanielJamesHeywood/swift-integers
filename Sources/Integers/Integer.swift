@@ -719,7 +719,11 @@ extension Integer {
     
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
-        fatalError()
+        var integer = 0 as Integer
+        for word in _words {
+            fatalError()
+        }
+        return integer
     }
 }
 
