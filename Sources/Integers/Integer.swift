@@ -168,23 +168,19 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public static func / (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
-    }
+    public static func / (lhs: Integer, rhs: Integer) -> Integer { lhs.quotientAndRemainder(dividingBy: rhs).quotient }
     
     @inlinable
     public static func /= (lhs: inout Integer, rhs: Integer) {
-        fatalError()
+        lhs = lhs / rhs
     }
     
     @inlinable
-    public static func % (lhs: Integer, rhs: Integer) -> Integer {
-        fatalError()
-    }
+    public static func % (lhs: Integer, rhs: Integer) -> Integer { lhs.quotientAndRemainder(dividingBy: rhs).remainder }
     
     @inlinable
     public static func %= (lhs: inout Integer, rhs: Integer) {
-        fatalError()
+        lhs = lhs % rhs
     }
     
     @inlinable
