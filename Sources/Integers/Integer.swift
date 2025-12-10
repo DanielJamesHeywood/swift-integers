@@ -705,6 +705,7 @@ extension Integer {
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
                         for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
+                            let (high, low) = word.multipliedFullWidth(by: otherWord)
                             fatalError()
                         }
                     }
