@@ -689,12 +689,9 @@ extension Integer {
     
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
-        guard other != 0, self != 1 else { return other }
-        guard self != 0, other != 1 else { return self }
         let wordCount = _words.count + other._words.count
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
-            guard word != UInt.min else { continue }
             integer += Integer(
                 _words: Array(
                     unsafeUninitializedCapacity: wordCount,
