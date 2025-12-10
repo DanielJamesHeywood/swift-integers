@@ -699,7 +699,7 @@ extension Integer {
         for (index, word) in _words._enumeratedWithIndices() {
             integer += Integer(
                 _words: Array(
-                    unsafeUninitializedCapacity: 0,
+                    unsafeUninitializedCapacity: _words.count + other._words.count,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
                         for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
