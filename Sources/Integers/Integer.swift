@@ -728,7 +728,24 @@ extension Integer {
     
     @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
-        fatalError()
+        precondition(other != 0)
+        switch _compareUnsigned(to: other) {
+        case .lessThan: return (0, self)
+        case .greaterThan: break
+        case .equalTo: return (1, 0)
+        }
+        var (quotient, remainder) = (0 as Integer, self)
+        repeat {
+            let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
+            let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
+            var shift = remainderBitWidth - otherBitWidth
+            if remainder._compareUnsigned(to: other << shift) != .lessThan {
+                shift &-= 1
+            }
+            quotient += 1 << shift
+            remainder -= other << shift
+        } while remainder._compareUnsigned(to: other) != .lessThan
+        return (quotient, remainder)
     }
 }
 
