@@ -651,9 +651,7 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public func isMultiple(of other: Integer) -> Bool {
-        fatalError()
-    }
+    public func isMultiple(of other: Integer) -> Bool { self % other == 0 }
     
     @inlinable
     public func signum() -> Integer { _isNegative ? -1 : _isZero ? 0 : 1 }
