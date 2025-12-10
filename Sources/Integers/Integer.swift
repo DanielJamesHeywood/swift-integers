@@ -726,7 +726,9 @@ extension Integer {
                     unsafeUninitializedCapacity: 0,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
-                        fatalError()
+                        for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
+                            fatalError()
+                        }
                     }
                 )
             )
