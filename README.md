@@ -15,6 +15,7 @@ To use Swift Integers in a SwiftPM project:
 2.
 
 ```swift
+.product(name: "Integers", package: "swift-integers"),
 ```
 
 3.
