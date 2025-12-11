@@ -1,6 +1,6 @@
 # Swift Integers
 
-**Swift Integers** is a package which implements `Integer`, a `BinaryInteger` with no fixed width.
+**Swift Integers** is a package which implements `Integer`, a signed `BinaryInteger` with no fixed width, for the Swift programming language.
 
 ## Using Swift Integers
 
