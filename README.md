@@ -4,7 +4,7 @@
 
 ## Using Swift Integers
 
-To use Swift Integers in a SwiftPM project:
+To use **Swift Integers** in a SwiftPM project:
 
 1.
 
