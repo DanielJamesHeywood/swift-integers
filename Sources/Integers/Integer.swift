@@ -704,10 +704,9 @@ extension Integer {
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
             guard word != 0 else { continue }
-            let wordCount = index + other._words.count
             integer += word != 1 ? Integer(
                 _words: Array(
-                    unsafeUninitializedCapacity: wordCount + 1,
+                    unsafeUninitializedCapacity: index + other._words.count + 1,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
                         var carry = 0 as UInt
@@ -717,7 +716,7 @@ extension Integer {
                             buffer.initializeElement(at: index + otherIndex, to: partialValue)
                             carry = overflow ? high &+ 1 : high
                         }
-                        buffer.initializeElement(at: wordCount, to: carry)
+                        buffer.initializeElement(at: index + other._words.endIndex, to: carry)
                         initializedCount = buffer.count
                     }
                 )
