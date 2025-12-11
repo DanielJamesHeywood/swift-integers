@@ -1,5 +1,3 @@
 # Swift Integers
 
-**Swift Integers** is a package for the Swift programming language.
-
-The package implements `Integer`, a `BinaryInteger` with no fixed width.
+**Swift Integers** is a package which implements `Integer`, a `BinaryInteger` with no fixed width.
