@@ -621,9 +621,7 @@ extension Integer: BinaryInteger {
             _words: Array(
                 unsafeUninitializedCapacity: wordCount,
                 initializingWith: { buffer, initializedCount in
-                    if wordwiseShift != 0 {
-                        buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: wordwiseShift)
-                    }
+                    buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: wordwiseShift)
                     if bitwiseShift != 0 {
                         let inverseBitwiseShift = UInt.bitWidth - bitwiseShift
                         buffer.initializeElement(at: wordwiseShift, to: lhs._words.first.unsafelyUnwrapped << bitwiseShift)
