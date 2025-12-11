@@ -703,6 +703,7 @@ extension Integer {
         guard _words.count <= other._words.count else { return other._multipliedUnsigned(by: self) }
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
+            guard word != 0 else { continue }
             integer += Integer(
                 _words: Array(
                     unsafeUninitializedCapacity: index + other._words.count + 1,
