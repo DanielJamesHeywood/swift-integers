@@ -707,17 +707,21 @@ extension Integer {
             let wordCount = index + other._words.count
             integer += Integer(
                 _words: Array(
-                    unsafeUninitializedCapacity: wordCount + 1,
+                    unsafeUninitializedCapacity: word == 1 ? wordCount : wordCount + 1,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
-                        var carry = 0 as UInt
-                        for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
-                            let (high, low) = word.multipliedFullWidth(by: otherWord)
-                            let (partialValue, overflow) = low.addingReportingOverflow(carry)
-                            buffer.initializeElement(at: index + otherIndex, to: partialValue)
-                            carry = overflow ? high &+ 1 : high
+                        if word != 1 {
+                            var carry = 0 as UInt
+                            for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
+                                let (high, low) = word.multipliedFullWidth(by: otherWord)
+                                let (partialValue, overflow) = low.addingReportingOverflow(carry)
+                                buffer.initializeElement(at: index + otherIndex, to: partialValue)
+                                carry = overflow ? high &+ 1 : high
+                            }
+                            buffer.initializeElement(at: wordCount, to: carry)
+                        } else {
+                            buffer._initializeElements(startingAt: index, toContentsOf: _words)
                         }
-                        buffer.initializeElement(at: wordCount, to: carry)
                         initializedCount = buffer.count
                     }
                 )
