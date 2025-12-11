@@ -709,7 +709,7 @@ extension Integer {
                     unsafeUninitializedCapacity: index + other._words.count + 1,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
-                        var carry = UInt.min
+                        var carry = 0 as UInt
                         for (otherIndex, otherWord) in other._words._enumeratedWithIndices() {
                             let (high, low) = word.multipliedFullWidth(by: otherWord)
                             let (partialValue, overflow) = low.addingReportingOverflow(carry)
