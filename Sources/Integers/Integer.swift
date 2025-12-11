@@ -714,10 +714,7 @@ extension Integer {
                             let (high, low) = word.multipliedFullWidth(by: otherWord)
                             let (partialValue, overflow) = low.addingReportingOverflow(carry)
                             buffer.initializeElement(at: index + otherIndex, to: partialValue)
-                            carry = high
-                            if overflow {
-                                carry &+= 1
-                            }
+                            carry = overflow ? high &+ 1 : high
                         }
                         buffer.initializeElement(at: index + other._words.endIndex, to: carry)
                         initializedCount = buffer.count
