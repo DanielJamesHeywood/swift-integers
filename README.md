@@ -6,7 +6,7 @@
 
 To use **Swift Integers** in a SwiftPM project:
 
-1.
+1. Include **Swift Integers** in the dependencies of your package:
 
 ```swift
 .package(url: "https://github.com/DanielJamesHeywood/swift-integers", from: "1.0.0"),
