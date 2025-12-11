@@ -705,7 +705,7 @@ extension Integer {
         for (index, word) in _words._enumeratedWithIndices() {
             guard word != 0 else { continue }
             let wordCount = index + other._words.count
-            integer += Integer(
+            integer += word != 1 ? Integer(
                 _words: Array(
                     unsafeUninitializedCapacity: word == 1 ? wordCount : wordCount + 1,
                     initializingWith: { buffer, initializedCount in
@@ -725,7 +725,7 @@ extension Integer {
                         initializedCount = buffer.count
                     }
                 )
-            )
+            ) : other << (index * UInt.bitWidth)
         }
         return integer
     }
