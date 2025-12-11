@@ -701,12 +701,11 @@ extension Integer {
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
         guard _words.count <= other._words.count else { return other._multipliedUnsigned(by: self) }
-        let wordCount = _words.count + other._words.count
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
             integer += Integer(
                 _words: Array(
-                    unsafeUninitializedCapacity: wordCount,
+                    unsafeUninitializedCapacity: index + other._words.count + 1,
                     initializingWith: { buffer, initializedCount in
                         buffer._initializeElements(startingAt: 0, repeating: UInt.min, count: index)
                         var carry = UInt.min
@@ -720,7 +719,7 @@ extension Integer {
                             }
                         }
                         buffer.initializeElement(at: index + other._words.endIndex, to: carry)
-                        initializedCount = index + other._words.count
+                        initializedCount = buffer.count
                     }
                 )
             )
