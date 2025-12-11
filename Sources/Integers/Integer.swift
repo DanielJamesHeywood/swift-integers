@@ -701,6 +701,8 @@ extension Integer {
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
         guard _words.count <= other._words.count else { return other._multipliedUnsigned(by: self) }
+        guard other != 0, self != 1 else { return other }
+        guard self != 0, other != 1 else { return self }
         var integer = Integer(
             _words: Array(
                 unsafeUninitializedCapacity: _words.count + other._words.count,
