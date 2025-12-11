@@ -83,9 +83,6 @@ extension Integer: SignedNumeric {
     @inlinable
     public mutating func negate() {
         let isNegative = _isNegative
-        guard !_isZero else {
-            return
-        }
         if isNegative {
             _words.reserveCapacity(_words.count + 1)
         }
