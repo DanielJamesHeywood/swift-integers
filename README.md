@@ -19,5 +19,5 @@ To use Swift Integers with SwiftPM:
 3.
 
 ```swift
-import Numerics
+import Integers
 ```
