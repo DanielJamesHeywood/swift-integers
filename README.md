@@ -4,11 +4,12 @@
 
 ## Using Swift Integers
 
-To use Swift Integers with SwiftPM:
+To use Swift Integers in a SwiftPM project:
 
 1.
 
 ```swift
+.package(url: "https://github.com/DanielJamesHeywood/swift-integers", from: "1.0.0"),
 ```
 
 2.
