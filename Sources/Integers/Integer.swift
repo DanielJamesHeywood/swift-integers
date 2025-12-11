@@ -703,15 +703,7 @@ extension Integer {
         guard _words.count <= other._words.count else { return other._multipliedUnsigned(by: self) }
         guard other != 0, self != 1 else { return other }
         guard self != 0, other != 1 else { return self }
-        var integer = Integer(
-            _words: Array(
-                unsafeUninitializedCapacity: _words.count + other._words.count,
-                initializingWith: { buffer, initializedCount in
-                    buffer.initializeElement(at: 0, to: UInt.min)
-                    initializedCount = 1
-                }
-            )
-        )
+        var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
             guard word != 0 else { continue }
             let wordCount = index + other._words.count
