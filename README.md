@@ -12,13 +12,13 @@ To use **Swift Integers** in a SwiftPM project:
 .package(url: "https://github.com/DanielJamesHeywood/swift-integers", from: "1.0.0"),
 ```
 
-2.
+2. Include `Integers` in the dependencies of your target:
 
 ```swift
 .product(name: "Integers", package: "swift-integers"),
 ```
 
-3. Import `Integers` in your source code.
+3. Import `Integers` in your source code:
 
 ```swift
 import Integers
