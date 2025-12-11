@@ -700,6 +700,7 @@ extension Integer {
     
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
+        guard _words.count <= other._words.count else { return other._multipliedUnsigned(by: self) }
         let wordCount = _words.count + other._words.count
         var integer = 0 as Integer
         for (index, word) in _words._enumeratedWithIndices() {
