@@ -9,7 +9,7 @@ public struct Integer {
     internal init(_words: [UInt]) {
         precondition(!_words.isEmpty)
         self._words = _words
-        self._normalize()
+        _normalize()
     }
     
     @inlinable
