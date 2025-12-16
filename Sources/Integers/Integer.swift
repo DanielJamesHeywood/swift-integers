@@ -873,7 +873,7 @@ internal func _parseIntegerDigits(from codeUnits: UnsafeBufferPointer<UInt8>, is
 extension Integer: Encodable {
     
     @inlinable
-    public func encode(to encoder: any Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(_words)
     }
@@ -882,7 +882,7 @@ extension Integer: Encodable {
 extension Integer: Decodable {
     
     @inlinable
-    public init(from decoder: any Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let words = try decoder.singleValueContainer().decode([UInt].self)
         guard !words.isEmpty else {
             throw DecodingError.dataCorrupted(
