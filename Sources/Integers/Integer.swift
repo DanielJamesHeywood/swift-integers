@@ -69,8 +69,6 @@ extension Integer: Numeric {
         self.init(source)
     }
     
-    public typealias Magnitude = Integer
-    
     @inlinable
     public var magnitude: Integer { _isNegative ? -self : self }
 }
@@ -100,8 +98,6 @@ extension Integer: SignedNumeric {
 }
 
 extension Integer: Strideable {
-    
-    public typealias Stride = Integer
     
     @inlinable
     public func distance(to other: Integer) -> Integer { other - self }
@@ -149,8 +145,6 @@ extension Integer: BinaryInteger {
     public init<T: BinaryInteger>(clamping source: T) {
         self.init(source)
     }
-    
-    public typealias Words = [UInt]
     
     @inlinable
     public var words: [UInt] { _words }
@@ -897,8 +891,6 @@ extension Integer: Decodable {
 }
 
 extension Integer: ExpressibleByIntegerLiteral {
-    
-    public typealias IntegerLiteralType = StaticBigInt
     
     @inlinable
     public init(integerLiteral value: StaticBigInt) {
