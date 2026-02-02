@@ -44,22 +44,30 @@ public struct Integer {
 extension Integer {
     
     @inlinable
-    internal var _isNegative: Bool { _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0 }
+    internal var _isNegative: Bool {
+        _words.last.unsafelyUnwrapped.leadingZeroBitCount == 0
+    }
     
     @inlinable
-    internal var _isZero: Bool { _words == [0] }
+    internal var _isZero: Bool {
+        _words == [0]
+    }
 }
 
 extension Integer {
     
     @inlinable
-    internal var _signExtendingWord: UInt { _isNegative ? UInt.max : UInt.min }
+    internal var _signExtendingWord: UInt {
+        _isNegative ? UInt.max : UInt.min
+    }
 }
 
 extension Integer: AdditiveArithmetic {
     
     @inlinable
-    public static var zero: Integer { 0 }
+    public static var zero: Integer {
+        0
+    }
 }
 
 extension Integer: Numeric {
@@ -70,13 +78,17 @@ extension Integer: Numeric {
     }
     
     @inlinable
-    public var magnitude: Integer { _isNegative ? -self : self }
+    public var magnitude: Integer {
+        _isNegative ? -self : self
+    }
 }
 
 extension Integer: SignedNumeric {
     
     @inlinable
-    public prefix static func - (operand: Integer) -> Integer { 0 - operand }
+    public prefix static func - (operand: Integer) -> Integer {
+        0 - operand
+    }
     
     @inlinable
     public mutating func negate() {
@@ -100,16 +112,22 @@ extension Integer: SignedNumeric {
 extension Integer: Strideable {
     
     @inlinable
-    public func distance(to other: Integer) -> Integer { other - self }
+    public func distance(to other: Integer) -> Integer {
+        other - self
+    }
     
     @inlinable
-    public func advanced(by n: Integer) -> Integer { self + n }
+    public func advanced(by n: Integer) -> Integer {
+        self + n
+    }
 }
 
 extension Integer: BinaryInteger {
     
     @inlinable
-    public static var isSigned: Bool { true }
+    public static var isSigned: Bool {
+        true
+    }
     
     @inlinable
     public init?<T: BinaryFloatingPoint>(exactly source: T) {
@@ -147,10 +165,14 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public var words: [UInt] { _words }
+    public var words: [UInt] {
+        _words
+    }
     
     @inlinable
-    public var bitWidth: Int { _words.count * UInt.bitWidth }
+    public var bitWidth: Int {
+        _words.count * UInt.bitWidth
+    }
     
     @inlinable
     public var trailingZeroBitCount: Int {
@@ -159,7 +181,9 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public static func / (lhs: Integer, rhs: Integer) -> Integer { lhs.quotientAndRemainder(dividingBy: rhs).quotient }
+    public static func / (lhs: Integer, rhs: Integer) -> Integer {
+        lhs.quotientAndRemainder(dividingBy: rhs).quotient
+    }
     
     @inlinable
     public static func /= (lhs: inout Integer, rhs: Integer) {
@@ -167,7 +191,9 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public static func % (lhs: Integer, rhs: Integer) -> Integer { lhs.quotientAndRemainder(dividingBy: rhs).remainder }
+    public static func % (lhs: Integer, rhs: Integer) -> Integer {
+        lhs.quotientAndRemainder(dividingBy: rhs).remainder
+    }
     
     @inlinable
     public static func %= (lhs: inout Integer, rhs: Integer) {
@@ -366,7 +392,9 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public prefix static func ~ (x: Integer) -> Integer { x ^ -1 }
+    public prefix static func ~ (x: Integer) -> Integer {
+        x ^ -1
+    }
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
@@ -651,10 +679,14 @@ extension Integer: BinaryInteger {
     }
     
     @inlinable
-    public func isMultiple(of other: Integer) -> Bool { self % other == 0 }
+    public func isMultiple(of other: Integer) -> Bool {
+        self % other == 0
+    }
     
     @inlinable
-    public func signum() -> Integer { _isNegative ? -1 : _isZero ? 0 : 1 }
+    public func signum() -> Integer {
+        _isNegative ? -1 : _isZero ? 0 : 1
+    }
 }
 
 extension BinaryFloatingPoint {
@@ -748,22 +780,32 @@ extension Integer: SignedInteger {}
 extension Integer: Equatable {
     
     @inlinable
-    public static func == (lhs: Integer, rhs: Integer) -> Bool { lhs._words == rhs._words }
+    public static func == (lhs: Integer, rhs: Integer) -> Bool {
+        lhs._words == rhs._words
+    }
 }
 
 extension Integer: Comparable {
     
     @inlinable
-    public static func < (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) == .lessThan }
+    public static func < (lhs: Integer, rhs: Integer) -> Bool {
+        lhs._compare(to: rhs) == .lessThan
+    }
     
     @inlinable
-    public static func <= (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) != .greaterThan }
+    public static func <= (lhs: Integer, rhs: Integer) -> Bool {
+        lhs._compare(to: rhs) != .greaterThan
+    }
     
     @inlinable
-    public static func >= (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) != .lessThan }
+    public static func >= (lhs: Integer, rhs: Integer) -> Bool {
+        lhs._compare(to: rhs) != .lessThan
+    }
     
     @inlinable
-    public static func > (lhs: Integer, rhs: Integer) -> Bool { lhs._compare(to: rhs) == .greaterThan }
+    public static func > (lhs: Integer, rhs: Integer) -> Bool {
+        lhs._compare(to: rhs) == .greaterThan
+    }
 }
 
 extension Integer {
@@ -923,7 +965,9 @@ extension Integer: ExpressibleByIntegerLiteral {
 extension Integer: CustomReflectable {
     
     @inlinable
-    public var customMirror: Mirror { Mirror(self, children: EmptyCollection()) }
+    public var customMirror: Mirror {
+        Mirror(self, children: EmptyCollection())
+    }
 }
 
 extension Integer: @unchecked Sendable {}
@@ -948,7 +992,9 @@ extension FixedWidthInteger {
 extension Collection {
     
     @inlinable
-    internal func _enumeratedWithIndices() -> Zip2Sequence<Indices, Self> { zip(indices, self) }
+    internal func _enumeratedWithIndices() -> Zip2Sequence<Indices, Self> {
+        zip(indices, self)
+    }
 }
 
 extension UnsafeMutableBufferPointer {
