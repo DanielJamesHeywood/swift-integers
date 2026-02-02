@@ -721,9 +721,12 @@ extension Integer {
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(other != 0)
         switch _compareUnsigned(to: other) {
-        case .lessThan: return (0, self)
-        case .greaterThan: break
-        case .equalTo: return (1, 0)
+        case .lessThan:
+            return (0, self)
+        case .greaterThan:
+            break
+        case .equalTo:
+            return (1, 0)
         }
         var (quotient, remainder) = (0 as Integer, self)
         repeat {
@@ -776,14 +779,20 @@ extension Integer {
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
-        case (false, false): return _compareUnsigned(to: other)
-        case (false, true): return .greaterThan
-        case (true, false): return .lessThan
+        case (false, false):
+            return _compareUnsigned(to: other)
+        case (false, true):
+            return .greaterThan
+        case (true, false):
+            return .lessThan
         case (true, true):
             switch _compareUnsigned(to: other) {
-            case .lessThan: return .greaterThan
-            case .greaterThan: return .lessThan
-            case .equalTo: return .equalTo
+            case .lessThan:
+                return .greaterThan
+            case .greaterThan:
+                return .lessThan
+            case .equalTo:
+                return .equalTo
             }
         }
     }
@@ -843,9 +852,12 @@ extension Integer: LosslessStringConvertible {
 internal func _parseInteger(from codeUnits: UnsafeBufferPointer<UInt8>) -> Integer? {
     guard !codeUnits.isEmpty else { return nil }
     switch codeUnits[0] {
-    case UInt8(ascii: "-"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
-    case UInt8(ascii: "+"): return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
-    default: return _parseIntegerDigits(from: codeUnits)
+    case UInt8(ascii: "-"):
+        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: true)
+    case UInt8(ascii: "+"):
+        return _parseIntegerDigits(from: codeUnits.extracting(1...), isNegative: false)
+    default:
+        return _parseIntegerDigits(from: codeUnits)
     }
 }
 
