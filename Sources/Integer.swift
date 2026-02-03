@@ -707,6 +707,9 @@ extension Integer: BinaryInteger {
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(rhs != 0)
+        guard rhs != 1 else {
+            return (self, 0)
+        }
         var (quotient, remainder) = magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude)
         if _isNegative != rhs._isNegative {
             quotient.negate()
