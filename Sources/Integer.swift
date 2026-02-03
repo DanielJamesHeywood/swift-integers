@@ -804,6 +804,9 @@ extension Integer {
     @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(other != 0)
+        guard other != 1 else {
+            return (self, 0)
+        }
         switch _compareUnsigned(to: other) {
         case .lessThan:
             return (0, self)
