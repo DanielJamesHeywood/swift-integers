@@ -712,7 +712,7 @@ extension Integer: BinaryInteger {
             return (self, 0)
         }
         guard bitWidth >= rhs.bitWidth else {
-            return _isNegative && !rhs._isNegative && self + rhs == 0 ? (-1, 0) : (0, self)
+            return _isNegative && !rhs._isNegative && self == -rhs ? (-1, 0) : (0, self)
         }
         var (quotient, remainder) = magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude)
         if _isNegative != rhs._isNegative {
