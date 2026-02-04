@@ -1042,6 +1042,14 @@ extension Integer: @unchecked Sendable {}
 extension FixedWidthInteger {
     
     @inlinable
+    internal var _leadingOneBitCount: Int {
+        (~self).leadingZeroBitCount
+    }
+}
+
+extension FixedWidthInteger {
+    
+    @inlinable
     internal func _addingReportingOverflow(_ rhs: Self, carrying: Bool) -> (partialValue: Self, overflow: Bool) {
         guard carrying else {
             return addingReportingOverflow(rhs)
