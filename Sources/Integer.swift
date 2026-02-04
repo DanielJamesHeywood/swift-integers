@@ -711,15 +711,8 @@ extension Integer: BinaryInteger {
         guard rhs != 1 else {
             return (self, 0)
         }
-        switch (_isNegative, rhs._isNegative) {
-        case (false, false), (false, true), (true, true):
-            guard bitWidth >= rhs.bitWidth else {
-                return (0, self)
-            }
-        case (true, false):
-            guard bitWidth + 1 >= rhs.bitWidth else {
-                return (0, self)
-            }
+        guard _isNegative && !rhs._isNegative ? bitWidth + 1 >= rhs.bitWidth : bitWidth >= rhs.bitWidth else {
+            return (0, self)
         }
         var (quotient, remainder) = magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude)
         if _isNegative != rhs._isNegative {
