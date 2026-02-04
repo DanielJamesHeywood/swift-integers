@@ -173,7 +173,8 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public var bitWidth: Int {
-        _words.count * UInt.bitWidth - (_isNegative ? (~_words.last.unsafelyUnwrapped).leadingZeroBitCount : _words.last.unsafelyUnwrapped.leadingZeroBitCount)
+        let lastWord = _words.last.unsafelyUnwrapped
+        return _words.count * UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
     }
     
     @inlinable
