@@ -733,6 +733,11 @@ extension Integer: BinaryInteger {
         guard bitWidth >= other.bitWidth else {
             return _isNegative && !other._isNegative && self == -other
         }
+        let trailingZeroBitCount = trailingZeroBitCount
+        let otherTrailingZeroBitCount = other.trailingZeroBitCount
+        guard trailingZeroBitCount >= otherTrailingZeroBitCount else {
+            return false
+        }
         return self % other == 0
     }
     
