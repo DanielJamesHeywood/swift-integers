@@ -726,7 +726,14 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func isMultiple(of other: Integer) -> Bool {
-        self % other == 0
+        precondition(other != 0)
+        guard other != 1 else {
+            return true
+        }
+        guard bitWidth >= other.bitWidth else {
+            return _isNegative && !other._isNegative && self == -other
+        }
+        return self % other == 0
     }
     
     @inlinable
