@@ -708,9 +708,6 @@ extension Integer: BinaryInteger {
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(rhs != 0)
-        guard rhs != 1 else {
-            return (self, 0)
-        }
         guard bitWidth >= rhs.bitWidth else {
             return _isNegative && !rhs._isNegative && self == -rhs ? (-1, 0) : (0, self)
         }
