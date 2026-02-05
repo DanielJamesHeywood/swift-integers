@@ -1061,6 +1061,27 @@ extension Integer: CustomReflectable {
 
 extension Integer: @unchecked Sendable {}
 
+extension FixedWidthInteger {
+    
+    @inlinable
+    internal func _addingReportingOverflow(_ rhs: Self, carrying: Bool) -> (partialValue: Self, overflow: Bool) {
+        guard carrying else {
+            return addingReportingOverflow(rhs)
+        }
+        let (partialValue, overflow) = addingReportingOverflow(rhs)
+        return overflow ? (partialValue &+ 1, true) : partialValue.addingReportingOverflow(1)
+    }
+    
+    @inlinable
+    internal func _subtractingReportingOverflow(_ rhs: Self, borrowing: Bool) -> (partialValue: Self, overflow: Bool) {
+        guard borrowing else {
+            return subtractingReportingOverflow(rhs)
+        }
+        let (partialValue, overflow) = subtractingReportingOverflow(rhs)
+        return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
+    }
+}
+
 extension UnsafeMutableBufferPointer {
     
     @inlinable
@@ -1081,27 +1102,6 @@ extension FixedWidthInteger {
     @inlinable
     internal var _leadingOneBitCount: Int {
         (~self).leadingZeroBitCount
-    }
-}
-
-extension FixedWidthInteger {
-    
-    @inlinable
-    internal func _addingReportingOverflow(_ rhs: Self, carrying: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard carrying else {
-            return addingReportingOverflow(rhs)
-        }
-        let (partialValue, overflow) = addingReportingOverflow(rhs)
-        return overflow ? (partialValue &+ 1, true) : partialValue.addingReportingOverflow(1)
-    }
-    
-    @inlinable
-    internal func _subtractingReportingOverflow(_ rhs: Self, borrowing: Bool) -> (partialValue: Self, overflow: Bool) {
-        guard borrowing else {
-            return subtractingReportingOverflow(rhs)
-        }
-        let (partialValue, overflow) = subtractingReportingOverflow(rhs)
-        return overflow ? (partialValue &- 1, true) : partialValue.subtractingReportingOverflow(1)
     }
 }
 
