@@ -741,6 +741,9 @@ extension Integer: BinaryInteger {
         guard otherTrailingZeroBitCount != other.bitWidth + 2 else {
             return true
         }
+        guard bitWidth - trailingZeroBitCount >= other.bitWidth - otherTrailingZeroBitCount else {
+            return false
+        }
         guard trailingZeroBitCount < bitWidth - (_words.count - 1) * UInt.bitWidth else {
             return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
         }
