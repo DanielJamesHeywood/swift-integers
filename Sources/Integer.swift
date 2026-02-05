@@ -887,14 +887,6 @@ extension Integer: Comparable {
 
 extension Integer {
     
-    @frozen
-    @usableFromInline
-    internal enum _ComparisonResult {
-        case lessThan
-        case greaterThan
-        case equalTo
-    }
-    
     @inlinable
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
