@@ -180,7 +180,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public var trailingZeroBitCount: Int {
         guard let index = _words.firstIndex(where: { word in word != 0 }) else {
-            return UInt.bitWidth
+            return 1
         }
         return index * UInt.bitWidth + _words[index].trailingZeroBitCount
     }
