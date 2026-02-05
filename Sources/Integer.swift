@@ -735,7 +735,7 @@ extension Integer: BinaryInteger {
         guard trailingZeroBitCount >= otherTrailingZeroBitCount else {
             return false
         }
-        guard otherTrailingZeroBitCount != other.bitWidth + 2 else {
+        guard otherTrailingZeroBitCount < other.bitWidth + 2 else {
             return true
         }
         guard bitWidth - trailingZeroBitCount >= other.bitWidth - otherTrailingZeroBitCount else {
