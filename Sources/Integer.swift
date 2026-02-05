@@ -1113,18 +1113,18 @@ extension Collection {
     }
 }
 
-extension UnsafeMutableBufferPointer {
+@usableFromInline
+internal enum _ComparisonResult {
+    case lessThan
+    case greaterThan
+    case equalTo
+}
+
+extension Comparable {
     
     @inlinable
-    internal func _initializeElements(startingAt index: Index, toContentsOf source: some Collection<Element>) {
-        precondition(startIndex <= index && index + source.count <= endIndex)
-        _ = suffix(from: index).initialize(fromContentsOf: source)
-    }
-    
-    @inlinable
-    internal func _initializeElements(startingAt index: Index, repeating repeatedValue: Element, count: Int) {
-        precondition(startIndex <= index && index + count <= endIndex)
-        suffix(from: index).prefix(count).initialize(repeating: repeatedValue)
+    internal func _compare(to other: Self) -> _ComparisonResult {
+        self < other ? .lessThan : self == other ? .equalTo : .greaterThan
     }
 }
 
