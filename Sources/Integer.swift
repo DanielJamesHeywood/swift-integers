@@ -793,7 +793,7 @@ extension Integer {
     
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
-        guard _words.count <= other._words.count else {
+        guard _words.count(where: { word in word != 0 }) <= other._words.count(where: { word in word != 0 }) else {
             return other._multipliedUnsigned(by: self)
         }
         var integer = 0 as Integer
