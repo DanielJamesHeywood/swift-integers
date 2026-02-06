@@ -738,10 +738,10 @@ extension Integer: BinaryInteger {
             return false
         }
         let trailingZeroBitCount = trailingZeroBitCount
-        guard trailingZeroBitCount < bitWidth - (_words.count - 1) * UInt.bitWidth else {
+        guard trailingZeroBitCount < _lastWordBitWidth else {
             return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
         }
-        guard otherTrailingZeroBitCount < other.bitWidth - (other._words.count - 1) * UInt.bitWidth else {
+        guard otherTrailingZeroBitCount < other._lastWordBitWidth else {
             return self % (other >> otherTrailingZeroBitCount) == 0
         }
         return self % other == 0
@@ -834,6 +834,15 @@ extension Integer {
             return .lessThan
         }
         return _words[quotient].trailingZeroBitCount._compare(to: remainder)
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal var _lastWordBitWidth: Int {
+        let lastWord = _words.last.unsafelyUnwrapped
+        return UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
     }
 }
 
