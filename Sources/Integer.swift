@@ -824,6 +824,22 @@ extension Integer {
 extension Integer {
     
     @inlinable
+    internal func _compareTrailingZeroBitCount(to otherTrailingZeroBitCount: Int) -> _ComparisonResult {
+        precondition(otherTrailingZeroBitCount >= 0)
+        guard bitWidth >= otherTrailingZeroBitCount else {
+            return .lessThan
+        }
+        let (quotient, remainder) = otherTrailingZeroBitCount.quotientAndRemainder(dividingBy: UInt.bitWidth)
+        guard _words.prefix(quotient).allSatisfy({ word in word == 0 }) else {
+            return .lessThan
+        }
+        return _words[quotient].trailingZeroBitCount._compare(to: remainder)
+    }
+}
+
+extension Integer {
+    
+    @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(other != 0)
         guard other != 1 else {
