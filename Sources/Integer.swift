@@ -727,17 +727,17 @@ extension Integer: BinaryInteger {
         guard bitWidth >= other.bitWidth else {
             return _isNegative && !other._isNegative && self == -other
         }
-        let trailingZeroBitCount = trailingZeroBitCount
         let otherTrailingZeroBitCount = other.trailingZeroBitCount
-        guard trailingZeroBitCount >= otherTrailingZeroBitCount else {
+        guard _compareTrailingZeroBitCount(to: otherTrailingZeroBitCount) != .lessThan else {
             return false
         }
         guard otherTrailingZeroBitCount < other.bitWidth + 2 else {
             return true
         }
-        guard bitWidth - trailingZeroBitCount >= other.bitWidth - otherTrailingZeroBitCount else {
+        guard _compareTrailingZeroBitCount(to: bitWidth - other.bitWidth + otherTrailingZeroBitCount) != .greaterThan else {
             return false
         }
+        let trailingZeroBitCount = trailingZeroBitCount
         guard trailingZeroBitCount < bitWidth - (_words.count - 1) * UInt.bitWidth else {
             return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
         }
