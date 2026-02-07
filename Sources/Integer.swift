@@ -819,7 +819,10 @@ extension Integer {
     
     @inlinable
     internal func _dividedUnsigned(by other: Integer) -> Integer {
-        _unsignedQuotientAndRemainder(dividingBy: other).quotient
+        precondition(!_isNegative)
+        precondition(!other._isNegative)
+        precondition(!other._isZero)
+        return _unsignedQuotientAndRemainder(dividingBy: other).quotient
     }
 }
 
@@ -827,7 +830,10 @@ extension Integer {
     
     @inlinable
     internal func _unsignedRemainder(dividingBy other: Integer) -> Integer {
-        _unsignedQuotientAndRemainder(dividingBy: other).remainder
+        precondition(!_isNegative)
+        precondition(!other._isNegative)
+        precondition(!other._isZero)
+        return _unsignedQuotientAndRemainder(dividingBy: other).remainder
     }
 }
 
@@ -894,6 +900,8 @@ extension Integer {
     
     @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
+        precondition(!_isNegative)
+        precondition(!other._isNegative)
         precondition(!other._isZero)
         guard other != 1 else {
             return (self, 0)
