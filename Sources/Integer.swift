@@ -896,7 +896,7 @@ extension Integer {
         guard other != 1 else {
             return (self, 0)
         }
-        switch _compareUnsigned(to: other) {
+        switch _compareAsUnsigned(to: other) {
         case .lessThan:
             return (0, self)
         case .greaterThan:
@@ -909,12 +909,12 @@ extension Integer {
             let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
             let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
             var shift = remainderBitWidth - otherBitWidth
-            if remainder._compareUnsigned(to: other << shift) == .lessThan {
+            if remainder._compareAsUnsigned(to: other << shift) == .lessThan {
                 shift &-= 1
             }
             quotient += 1 << shift
             remainder -= other << shift
-        } while remainder._compareUnsigned(to: other) != .lessThan
+        } while remainder._compareAsUnsigned(to: other) != .lessThan
         return (quotient, remainder)
     }
 }
@@ -958,13 +958,13 @@ extension Integer {
     internal func _compare(to other: Integer) -> _ComparisonResult {
         switch (_isNegative, other._isNegative) {
         case (false, false):
-            return _compareUnsigned(to: other)
+            return _compareAsUnsigned(to: other)
         case (false, true):
             return .greaterThan
         case (true, false):
             return .lessThan
         case (true, true):
-            switch _compareUnsigned(to: other) {
+            switch _compareAsUnsigned(to: other) {
             case .lessThan:
                 return .greaterThan
             case .greaterThan:
@@ -976,7 +976,7 @@ extension Integer {
     }
     
     @inlinable
-    internal func _compareUnsigned(to other: Integer) -> _ComparisonResult {
+    internal func _compareAsUnsigned(to other: Integer) -> _ComparisonResult {
         guard _words.count == other._words.count else {
             return _words.count < other._words.count ? .lessThan : .greaterThan
         }
