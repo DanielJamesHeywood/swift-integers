@@ -209,11 +209,15 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func % (lhs: Integer, rhs: Integer) -> Integer {
         precondition(rhs != 0)
-        guard rhs != 1 else {
-            return 0
-        }
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? 0 : lhs
+        }
+        guard rhs.trailingZeroBitCount + 2 != rhs.bitWidth else {
+            var remainder = lhs & (rhs - 1)
+            if lhs._isNegative {
+                remainder -= rhs
+            }
+            return remainder
         }
         var remainder = lhs.magnitude._unsignedRemainder(dividingBy: rhs.magnitude)
         if lhs._isNegative {
