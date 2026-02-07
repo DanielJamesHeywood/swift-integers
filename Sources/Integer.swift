@@ -187,7 +187,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
-        precondition(rhs != 0)
+        precondition(!rhs._isZero)
         guard rhs != 1 else {
             return lhs
         }
@@ -208,7 +208,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func % (lhs: Integer, rhs: Integer) -> Integer {
-        precondition(rhs != 0)
+        precondition(!rhs._isZero)
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? 0 : lhs
         }
@@ -233,10 +233,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func + (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
+        guard !lhs._isZero else {
             return rhs
         }
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return lhs
         }
         let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
@@ -281,11 +281,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func += (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard lhs != 0 else {
+        guard !lhs._isZero else {
             lhs = rhs
             return
         }
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return
         }
         if lhs._words.count < rhs._words.count {
@@ -327,7 +327,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func - (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return lhs
         }
         let maxWordCount = Swift.max(lhs._words.count, rhs._words.count)
@@ -372,7 +372,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func -= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return
         }
         if lhs._words.count < rhs._words.count {
@@ -414,10 +414,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func * (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0, lhs != 1 else {
+        guard !rhs._isZero, lhs != 1 else {
             return rhs
         }
-        guard lhs != 0, rhs != 1 else {
+        guard !lhs._isZero, rhs != 1 else {
             return lhs
         }
         var integer = lhs.magnitude._multipliedUnsigned(by: rhs.magnitude)
@@ -439,10 +439,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
-        guard rhs != 0, lhs != -1 else {
+        guard !rhs._isZero, lhs != -1 else {
             return rhs
         }
-        guard lhs != 0, rhs != -1 else {
+        guard !lhs._isZero, rhs != -1 else {
             return lhs
         }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
@@ -480,11 +480,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard rhs != 0, lhs != -1 else {
+        guard !rhs._isZero, lhs != -1 else {
             lhs = rhs
             return
         }
-        guard lhs != 0, rhs != -1 else {
+        guard !lhs._isZero, rhs != -1 else {
             return
         }
         if lhs._words.count < rhs._words.count && lhsIsNegative {
@@ -504,10 +504,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func | (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0, rhs != -1 else {
+        guard !lhs._isZero, rhs != -1 else {
             return rhs
         }
-        guard rhs != 0, lhs != -1 else {
+        guard !rhs._isZero, lhs != -1 else {
             return lhs
         }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
@@ -545,11 +545,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard lhs != 0, rhs != -1 else {
+        guard !lhs._isZero, rhs != -1 else {
             lhs = rhs
             return
         }
-        guard rhs != 0, lhs != -1 else {
+        guard !rhs._isZero, lhs != -1 else {
             return
         }
         if lhs._words.count < rhs._words.count && !lhsIsNegative {
@@ -569,10 +569,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func ^ (lhs: Integer, rhs: Integer) -> Integer {
-        guard lhs != 0 else {
+        guard !lhs._isZero else {
             return rhs
         }
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return lhs
         }
         return Integer(
@@ -611,11 +611,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func ^= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard lhs != 0 else {
+        guard !lhs._isZero else {
             lhs = rhs
             return
         }
-        guard rhs != 0 else {
+        guard !rhs._isZero else {
             return
         }
         if lhs._words.count < rhs._words.count {
@@ -733,7 +733,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
-        precondition(rhs != 0)
+        precondition(!rhs._isZero)
         guard rhs != 1 else {
             return (self, 0)
         }
@@ -752,7 +752,7 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public func isMultiple(of other: Integer) -> Bool {
-        precondition(other != 0)
+        precondition(!other._isZero)
         guard bitWidth >= other.bitWidth else {
             return _isNegative && !other._isNegative && self == -other
         }
@@ -894,7 +894,7 @@ extension Integer {
     
     @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
-        precondition(other != 0)
+        precondition(!other._isZero)
         guard other != 1 else {
             return (self, 0)
         }
@@ -1009,7 +1009,7 @@ extension Integer: CustomStringConvertible {
             let (quotient, remainder) = magnitude.quotientAndRemainder(dividingBy: 10)
             codeUnits.append(UInt8(ascii: "0") &+ UInt8(remainder))
             magnitude = quotient
-        } while magnitude != 0
+        } while !magnitude._isZero
         if _isNegative {
             codeUnits.append(UInt8(ascii: "-"))
         }
