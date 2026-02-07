@@ -191,18 +191,7 @@ extension Integer: BinaryInteger {
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
         }
-        let rhTrailingZeroBitCount = rhs.trailingZeroBitCount
-        guard rhs._isNegative || rhTrailingZeroBitCount + 2 < rhs.bitWidth else {
-            return lhs << rhTrailingZeroBitCount
-        }
-        var quotient: Integer
-        if rhTrailingZeroBitCount >= lhs._lastWordBitWidth {
-            quotient = (lhs >> rhTrailingZeroBitCount).magnitude._dividedUnsigned(by: (rhs >> rhTrailingZeroBitCount).magnitude)
-        } else if rhTrailingZeroBitCount >= rhs._lastWordBitWidth {
-            quotient = lhs.magnitude._dividedUnsigned(by: (rhs >> rhTrailingZeroBitCount).magnitude)
-        } else {
-            quotient = lhs.magnitude._dividedUnsigned(by: rhs.magnitude)
-        }
+        var quotient = lhs.magnitude._dividedUnsigned(by: rhs.magnitude)
         if lhs._isNegative != rhs._isNegative {
             quotient.negate()
         }
