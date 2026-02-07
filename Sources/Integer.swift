@@ -835,6 +835,8 @@ extension Integer {
     
     @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
+        precondition(!_isNegative)
+        precondition(!other._isNegative)
         guard _words.count(where: { word in word != 0 }) <= other._words.count(where: { word in word != 0 }) else {
             return other._multipliedUnsigned(by: self)
         }
