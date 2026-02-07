@@ -188,6 +188,9 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
         precondition(rhs != 0)
+        guard rhs != 1 else {
+            return lhs
+        }
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
         }
@@ -206,6 +209,9 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func % (lhs: Integer, rhs: Integer) -> Integer {
         precondition(rhs != 0)
+        guard rhs != 1 else {
+            return 0
+        }
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? 0 : lhs
         }
@@ -724,6 +730,9 @@ extension Integer: BinaryInteger {
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(rhs != 0)
+        guard rhs != 1 else {
+            return (self, 0)
+        }
         guard bitWidth >= rhs.bitWidth else {
             return _isNegative && !rhs._isNegative && self == -rhs ? (-1, 0) : (0, self)
         }
