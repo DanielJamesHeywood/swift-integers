@@ -808,6 +808,31 @@ extension BinaryFloatingPoint {
 extension Integer {
     
     @inlinable
+    internal func _compareTrailingZeroBitCount(to otherTrailingZeroBitCount: Int) -> _ComparisonResult {
+        precondition(otherTrailingZeroBitCount >= 0)
+        guard bitWidth >= otherTrailingZeroBitCount else {
+            return .lessThan
+        }
+        let (quotient, remainder) = otherTrailingZeroBitCount.quotientAndRemainder(dividingBy: UInt.bitWidth)
+        guard _words.prefix(quotient).allSatisfy({ word in word == 0 }) else {
+            return .lessThan
+        }
+        return _words[quotient].trailingZeroBitCount._compare(to: remainder)
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal var _lastWordBitWidth: Int {
+        let lastWord = _words.last.unsafelyUnwrapped
+        return UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
+    }
+}
+
+extension Integer {
+    
+    @inlinable
     internal func _multipliedUnsigned(by other: Integer) -> Integer {
         guard _words.count(where: { word in word != 0 }) <= other._words.count(where: { word in word != 0 }) else {
             return other._multipliedUnsigned(by: self)
@@ -834,31 +859,6 @@ extension Integer {
             ) : other << (index * UInt.bitWidth)
         }
         return integer
-    }
-}
-
-extension Integer {
-    
-    @inlinable
-    internal func _compareTrailingZeroBitCount(to otherTrailingZeroBitCount: Int) -> _ComparisonResult {
-        precondition(otherTrailingZeroBitCount >= 0)
-        guard bitWidth >= otherTrailingZeroBitCount else {
-            return .lessThan
-        }
-        let (quotient, remainder) = otherTrailingZeroBitCount.quotientAndRemainder(dividingBy: UInt.bitWidth)
-        guard _words.prefix(quotient).allSatisfy({ word in word == 0 }) else {
-            return .lessThan
-        }
-        return _words[quotient].trailingZeroBitCount._compare(to: remainder)
-    }
-}
-
-extension Integer {
-    
-    @inlinable
-    internal var _lastWordBitWidth: Int {
-        let lastWord = _words.last.unsafelyUnwrapped
-        return UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
     }
 }
 
