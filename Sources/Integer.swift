@@ -766,9 +766,6 @@ extension Integer: BinaryInteger {
         guard trailingZeroBitCount < _lastWordBitWidth else {
             return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
         }
-        guard otherTrailingZeroBitCount < other._lastWordBitWidth else {
-            return self % (other >> otherTrailingZeroBitCount) == 0
-        }
         return self % other == 0
     }
     
