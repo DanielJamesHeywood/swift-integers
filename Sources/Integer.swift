@@ -187,7 +187,15 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
-        lhs.quotientAndRemainder(dividingBy: rhs).quotient
+        precondition(rhs != 0)
+        guard lhs.bitWidth >= rhs.bitWidth else {
+            return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
+        }
+        var quotient = lhs.magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude).quotient
+        if lhs._isNegative != rhs._isNegative {
+            quotient.negate()
+        }
+        return quotient
     }
     
     @inlinable
@@ -197,7 +205,15 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func % (lhs: Integer, rhs: Integer) -> Integer {
-        lhs.quotientAndRemainder(dividingBy: rhs).remainder
+        precondition(rhs != 0)
+        guard lhs.bitWidth >= rhs.bitWidth else {
+            return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? 0 : lhs
+        }
+        var remainder = lhs.magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude).remainder
+        if lhs._isNegative {
+            remainder.negate()
+        }
+        return remainder
     }
     
     @inlinable
