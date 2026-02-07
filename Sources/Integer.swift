@@ -191,7 +191,7 @@ extension Integer: BinaryInteger {
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
         }
-        var quotient = lhs.magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude).quotient
+        var quotient = lhs.magnitude._dividedUnsigned(by: rhs.magnitude)
         if lhs._isNegative != rhs._isNegative {
             quotient.negate()
         }
@@ -209,7 +209,7 @@ extension Integer: BinaryInteger {
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? 0 : lhs
         }
-        var remainder = lhs.magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude).remainder
+        var remainder = lhs.magnitude._unsignedRemainder(dividingBy: rhs.magnitude)
         if lhs._isNegative {
             remainder.negate()
         }
@@ -827,6 +827,22 @@ extension Integer {
     internal var _lastWordBitWidth: Int {
         let lastWord = _words.last.unsafelyUnwrapped
         return UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal func _dividedUnsigned(by other: Integer) -> Integer {
+        _unsignedQuotientAndRemainder(dividingBy: other).quotient
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal func _unsignedRemainder(dividingBy other: Integer) -> Integer {
+        _unsignedQuotientAndRemainder(dividingBy: other).remainder
     }
 }
 
