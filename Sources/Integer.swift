@@ -822,7 +822,18 @@ extension Integer {
         precondition(!_isNegative)
         precondition(!other._isNegative)
         precondition(!other._isZero)
-        return _unsignedQuotientAndRemainder(dividingBy: other).quotient
+        switch _compareAsUnsigned(to: other) {
+        case .lessThan:
+            return 0
+        case .greaterThan:
+            let otherTrailingZeroBitCount = other.trailingZeroBitCount
+            guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
+                return self >> otherTrailingZeroBitCount
+            }
+            return _unsignedQuotientAndRemainder(dividingBy: other).quotient
+        case .equalTo:
+            return 1
+        }
     }
 }
 
@@ -833,7 +844,18 @@ extension Integer {
         precondition(!_isNegative)
         precondition(!other._isNegative)
         precondition(!other._isZero)
-        return _unsignedQuotientAndRemainder(dividingBy: other).remainder
+        switch _compareAsUnsigned(to: other) {
+        case .lessThan:
+            return self
+        case .greaterThan:
+            let otherTrailingZeroBitCount = other.trailingZeroBitCount
+            guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
+                return self & (other - 1)
+            }
+            return _unsignedQuotientAndRemainder(dividingBy: other).remainder
+        case .equalTo:
+            return 0
+        }
     }
 }
 
@@ -903,13 +925,14 @@ extension Integer {
         precondition(!_isNegative)
         precondition(!other._isNegative)
         precondition(!other._isZero)
-        guard other != 1 else {
-            return (self, 0)
-        }
         switch _compareAsUnsigned(to: other) {
         case .lessThan:
             return (0, self)
         case .greaterThan:
+            let otherTrailingZeroBitCount = other.trailingZeroBitCount
+            guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
+                return (self >> otherTrailingZeroBitCount, self & (other - 1))
+            }
             break
         case .equalTo:
             return (1, 0)
