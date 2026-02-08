@@ -933,22 +933,21 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return (self >> otherTrailingZeroBitCount, self & (other - 1))
             }
-            break
+            var (quotient, remainder) = (0 as Integer, self)
+            repeat {
+                let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
+                let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
+                var shift = remainderBitWidth - otherBitWidth
+                if remainder._compareAsUnsigned(to: other << shift) == .lessThan {
+                    shift &-= 1
+                }
+                quotient += 1 << shift
+                remainder -= other << shift
+            } while remainder._compareAsUnsigned(to: other) != .lessThan
+            return (quotient, remainder)
         case .equalTo:
             return (1, 0)
         }
-        var (quotient, remainder) = (0 as Integer, self)
-        repeat {
-            let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
-            let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
-            var shift = remainderBitWidth - otherBitWidth
-            if remainder._compareAsUnsigned(to: other << shift) == .lessThan {
-                shift &-= 1
-            }
-            quotient += 1 << shift
-            remainder -= other << shift
-        } while remainder._compareAsUnsigned(to: other) != .lessThan
-        return (quotient, remainder)
     }
 }
 
