@@ -945,9 +945,7 @@ extension Integer {
             }
             var (quotient, remainder) = (0 as Integer, self)
             repeat {
-                let remainderBitWidth = remainder.bitWidth - remainder._words.last.unsafelyUnwrapped.leadingZeroBitCount
-                let otherBitWidth = other.bitWidth - other._words.last.unsafelyUnwrapped.leadingZeroBitCount
-                var shift = remainderBitWidth - otherBitWidth
+                var shift = remainder.bitWidth - other.bitWidth
                 if remainder._compareAsUnsigned(to: other << shift) == .lessThan {
                     shift &-= 1
                 }
