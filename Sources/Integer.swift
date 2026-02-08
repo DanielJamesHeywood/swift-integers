@@ -49,8 +49,18 @@ extension Integer {
     }
     
     @inlinable
+    internal var _isMinusOne: Bool {
+        _words == [UInt.max]
+    }
+    
+    @inlinable
+    internal var _isOne: Bool {
+        _words == [1]
+    }
+    
+    @inlinable
     internal var _isZero: Bool {
-        _words == [0]
+        _words == [UInt.min]
     }
 }
 
@@ -188,7 +198,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
         precondition(!rhs._isZero)
-        guard rhs != 1 else {
+        guard !rhs._isOne else {
             return lhs
         }
         guard lhs.bitWidth >= rhs.bitWidth else {
@@ -414,10 +424,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func * (lhs: Integer, rhs: Integer) -> Integer {
-        guard !rhs._isZero, lhs != 1 else {
+        guard !rhs._isZero, !lhs._isOne else {
             return rhs
         }
-        guard !lhs._isZero, rhs != 1 else {
+        guard !lhs._isZero, !rhs._isOne else {
             return lhs
         }
         var integer = lhs.magnitude._multipliedUnsigned(by: rhs.magnitude)
@@ -439,10 +449,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func & (lhs: Integer, rhs: Integer) -> Integer {
-        guard !rhs._isZero, lhs != -1 else {
+        guard !rhs._isZero, !lhs._isMinusOne else {
             return rhs
         }
-        guard !lhs._isZero, rhs != -1 else {
+        guard !lhs._isZero, !rhs._isMinusOne else {
             return lhs
         }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
@@ -480,11 +490,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func &= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard !rhs._isZero, lhs != -1 else {
+        guard !rhs._isZero, !lhs._isMinusOne else {
             lhs = rhs
             return
         }
-        guard !lhs._isZero, rhs != -1 else {
+        guard !lhs._isZero, !rhs._isMinusOne else {
             return
         }
         if lhs._words.count < rhs._words.count && lhsIsNegative {
@@ -504,10 +514,10 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func | (lhs: Integer, rhs: Integer) -> Integer {
-        guard !lhs._isZero, rhs != -1 else {
+        guard !lhs._isZero, !rhs._isMinusOne else {
             return rhs
         }
-        guard !rhs._isZero, lhs != -1 else {
+        guard !rhs._isZero, !lhs._isMinusOne else {
             return lhs
         }
         var wordCount = Swift.min(lhs._words.count, rhs._words.count)
@@ -545,11 +555,11 @@ extension Integer: BinaryInteger {
     @inlinable
     public static func |= (lhs: inout Integer, rhs: Integer) {
         let lhsIsNegative = lhs._isNegative, rhsIsNegative = rhs._isNegative
-        guard !lhs._isZero, rhs != -1 else {
+        guard !lhs._isZero, !rhs._isMinusOne else {
             lhs = rhs
             return
         }
-        guard !rhs._isZero, lhs != -1 else {
+        guard !rhs._isZero, !lhs._isMinusOne else {
             return
         }
         if lhs._words.count < rhs._words.count && !lhsIsNegative {
@@ -734,7 +744,7 @@ extension Integer: BinaryInteger {
     @inlinable
     public func quotientAndRemainder(dividingBy rhs: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(!rhs._isZero)
-        guard rhs != 1 else {
+        guard !rhs._isOne else {
             return (self, 0)
         }
         guard bitWidth >= rhs.bitWidth else {
