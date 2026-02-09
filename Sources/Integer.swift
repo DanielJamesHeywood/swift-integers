@@ -837,12 +837,26 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self >> otherTrailingZeroBitCount
             }
+            let dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
-            var (quotient, remainder) = (0 as Integer, self >> otherTrailingZeroBitCount)
-            repeat {
-                <#code#>
-            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
-            return quotient
+            if let divisor = UInt(exactly: divisor) {
+                return Integer(
+                    _words: Array(
+                        unsafeUninitializedCapacity: dividend._words.count,
+                        initializingWith: { buffer, initializedCount in
+                            var currentRemainder = 0 as UInt
+                            for (index, word) in dividend._words._enumeratedWithIndicesInReverse() {
+                                let (quotient, remainder) = divisor.dividingFullWidth((currentRemainder, word))
+                                buffer.initializeElement(at: index, to: quotient)
+                                currentRemainder = remainder
+                            }
+                            initializedCount = buffer.count
+                        }
+                    )
+                )
+            } else {
+                fatalError()
+            }
         case .equalTo:
             return 1
         }
@@ -864,11 +878,14 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self & (other - 1)
             }
+            let dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
-            var remainder = self >> otherTrailingZeroBitCount
-            repeat {
-                <#code#>
-            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
+            let remainder: Integer
+            if let divisor = UInt(exactly: divisor) {
+                fatalError()
+            } else {
+                fatalError()
+            }
             return remainder << otherTrailingZeroBitCount | (self & (other - 1))
         case .equalTo:
             return 0
@@ -950,11 +967,30 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return (self >> otherTrailingZeroBitCount, self & (other - 1))
             }
+            let dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
-            var (quotient, remainder) = (0 as Integer, self >> otherTrailingZeroBitCount)
-            repeat {
-                <#code#>
-            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
+            let (quotient, remainder): (Integer, Integer)
+            if let divisor = UInt(exactly: divisor) {
+                var currentRemainder = 0 as UInt
+                (quotient, remainder) = (
+                    Integer(
+                        _words: Array(
+                            unsafeUninitializedCapacity: dividend._words.count,
+                            initializingWith: { buffer, initializedCount in
+                                for (index, word) in dividend._words._enumeratedWithIndicesInReverse() {
+                                    let (quotient, remainder) = divisor.dividingFullWidth((currentRemainder, word))
+                                    buffer.initializeElement(at: index, to: quotient)
+                                    currentRemainder = remainder
+                                }
+                                initializedCount = buffer.count
+                            }
+                        )
+                    ),
+                    Integer(currentRemainder)
+                )
+            } else {
+                fatalError()
+            }
             return (quotient, remainder << otherTrailingZeroBitCount | (self & (other - 1)))
         case .equalTo:
             return (1, 0)
