@@ -882,7 +882,11 @@ extension Integer {
             let divisor = other >> otherTrailingZeroBitCount
             let remainder: Integer
             if let divisor = UInt(exactly: divisor) {
-                fatalError()
+                var currentRemainder = 0 as UInt
+                for word in dividend._words.reversed() {
+                    currentRemainder = divisor.dividingFullWidth((currentRemainder, word)).remainder
+                }
+                remainder = Integer(currentRemainder)
             } else {
                 fatalError()
             }
