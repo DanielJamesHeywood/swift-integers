@@ -1215,6 +1215,14 @@ extension Collection {
     }
 }
 
+extension BidirectionalCollection {
+    
+    @inlinable
+    internal func _enumeratedWithIndicesInReverse() -> Zip2Sequence<ReversedCollection<Indices>, ReversedCollection<Self>> {
+        zip(indices.reversed(), reversed())
+    }
+}
+
 @usableFromInline
 internal enum _ComparisonResult {
     case lessThan
