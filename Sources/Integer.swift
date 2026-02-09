@@ -776,11 +776,7 @@ extension Integer: BinaryInteger {
         guard _compareTrailingZeroBitCount(to: bitWidth - other.bitWidth + otherTrailingZeroBitCount) != .greaterThan else {
             return false
         }
-        let trailingZeroBitCount = trailingZeroBitCount
-        guard trailingZeroBitCount < _lastWordBitWidth else {
-            return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
-        }
-        return self % other == 0
+        return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
     }
     
     @inlinable
