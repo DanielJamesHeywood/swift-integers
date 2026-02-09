@@ -204,7 +204,7 @@ extension Integer: BinaryInteger {
         guard lhs.bitWidth >= rhs.bitWidth else {
             return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
         }
-        var quotient = lhs.magnitude._dividedUnsigned(by: rhs.magnitude)
+        var quotient = lhs.magnitude._unsignedQuotientAndRemainder(dividingBy: rhs.magnitude).quotient
         if lhs._isNegative != rhs._isNegative {
             quotient.negate()
         }
@@ -824,28 +824,6 @@ extension BinaryFloatingPoint {
 extension Integer {
     
     @inlinable
-    internal func _dividedUnsigned(by other: Integer) -> Integer {
-        precondition(!_isNegative)
-        precondition(!other._isNegative)
-        precondition(!other._isZero)
-        switch _compareAsUnsigned(to: other) {
-        case .lessThan:
-            return 0
-        case .greaterThan:
-            let otherTrailingZeroBitCount = other.trailingZeroBitCount
-            guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
-                return self >> otherTrailingZeroBitCount
-            }
-            return _unsignedQuotientAndRemainder(dividingBy: other).quotient
-        case .equalTo:
-            return 1
-        }
-    }
-}
-
-extension Integer {
-    
-    @inlinable
     internal func _unsignedRemainder(dividingBy other: Integer) -> Integer {
         precondition(!_isNegative)
         precondition(!other._isNegative)
@@ -858,7 +836,12 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self & (other - 1)
             }
-            return _unsignedQuotientAndRemainder(dividingBy: other).remainder
+            let divisor = other >> otherTrailingZeroBitCount
+            var remainder = self >> otherTrailingZeroBitCount
+            repeat {
+                <#code#>
+            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
+            return remainder << otherTrailingZeroBitCount | (self & (other - 1))
         case .equalTo:
             return 0
         }
@@ -939,16 +922,12 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return (self >> otherTrailingZeroBitCount, self & (other - 1))
             }
-            var (quotient, remainder) = (0 as Integer, self)
+            let divisor = other >> otherTrailingZeroBitCount
+            var (quotient, remainder) = (0 as Integer, self >> otherTrailingZeroBitCount)
             repeat {
-                var shift = remainder.bitWidth - other.bitWidth
-                if remainder._compareAsUnsigned(to: other << shift) == .lessThan {
-                    shift &-= 1
-                }
-                quotient += 1 << shift
-                remainder -= other << shift
-            } while remainder._compareAsUnsigned(to: other) != .lessThan
-            return (quotient, remainder)
+                <#code#>
+            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
+            return (quotient, remainder << otherTrailingZeroBitCount | (self & (other - 1)))
         case .equalTo:
             return (1, 0)
         }
