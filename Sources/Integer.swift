@@ -14,7 +14,8 @@ public struct Integer {
     
     @inlinable
     internal mutating func _normalize() {
-        if _words.last.unsafelyUnwrapped == UInt.min {
+        let lastWord = _words.last.unsafelyUnwrapped
+        if lastWord == UInt.min {
             repeat {
                 _words.removeLast()
             } while _words.last == UInt.min
@@ -26,7 +27,7 @@ public struct Integer {
                 _words = [UInt.min]
             }
         }
-        if _words.last.unsafelyUnwrapped == UInt.max {
+        if lastWord == UInt.max {
             repeat {
                 _words.removeLast()
             } while _words.last == UInt.max
