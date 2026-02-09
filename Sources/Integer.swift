@@ -197,7 +197,18 @@ extension Integer: BinaryInteger {
     
     @inlinable
     public static func / (lhs: Integer, rhs: Integer) -> Integer {
-        lhs.quotientAndRemainder(dividingBy: rhs).quotient
+        precondition(!rhs._isZero)
+        guard !rhs._isOne else {
+            return lhs
+        }
+        guard lhs.bitWidth >= rhs.bitWidth else {
+            return lhs._isNegative && !rhs._isNegative && lhs == -rhs ? -1 : 0
+        }
+        var quotient = lhs.magnitude._dividedUnsigned(by: rhs.magnitude)
+        if lhs._isNegative != rhs._isNegative {
+            quotient.negate()
+        }
+        return quotient
     }
     
     @inlinable
@@ -807,6 +818,33 @@ extension BinaryFloatingPoint {
             integer.negate()
         }
         return integer
+    }
+}
+
+extension Integer {
+    
+    @inlinable
+    internal func _dividedUnsigned(by other: Integer) -> Integer {
+        precondition(!_isNegative)
+        precondition(!other._isNegative)
+        precondition(!other._isZero)
+        switch _compareAsUnsigned(to: other) {
+        case .lessThan:
+            return 0
+        case .greaterThan:
+            let otherTrailingZeroBitCount = other.trailingZeroBitCount
+            guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
+                return self >> otherTrailingZeroBitCount
+            }
+            let divisor = other >> otherTrailingZeroBitCount
+            var (quotient, remainder) = (0 as Integer, self >> otherTrailingZeroBitCount)
+            repeat {
+                <#code#>
+            } while remainder._compareAsUnsigned(to: divisor) != .lessThan
+            return quotient
+        case .equalTo:
+            return 1
+        }
     }
 }
 
