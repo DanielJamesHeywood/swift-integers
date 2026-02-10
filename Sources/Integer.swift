@@ -950,15 +950,6 @@ extension Integer {
 extension Integer {
     
     @inlinable
-    internal var _lastWordBitWidth: Int {
-        let lastWord = _words.last.unsafelyUnwrapped
-        return UInt.bitWidth - (_isNegative ? lastWord._leadingOneBitCount : lastWord.leadingZeroBitCount) + 1
-    }
-}
-
-extension Integer {
-    
-    @inlinable
     internal func _unsignedQuotientAndRemainder(dividingBy other: Integer) -> (quotient: Integer, remainder: Integer) {
         precondition(!_isNegative)
         precondition(!other._isNegative)
