@@ -837,7 +837,7 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self >> otherTrailingZeroBitCount
             }
-            let dividend = self >> otherTrailingZeroBitCount
+            var dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
             if let divisor = UInt(exactly: divisor) {
                 return Integer(
@@ -878,7 +878,7 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self & (other - 1)
             }
-            let dividend = self >> otherTrailingZeroBitCount
+            var dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
             let remainder: Integer
             if let divisor = UInt(exactly: divisor) {
@@ -971,7 +971,7 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return (self >> otherTrailingZeroBitCount, self & (other - 1))
             }
-            let dividend = self >> otherTrailingZeroBitCount
+            var dividend = self >> otherTrailingZeroBitCount
             let divisor = other >> otherTrailingZeroBitCount
             let (quotient, remainder): (Integer, Integer)
             if let divisor = UInt(exactly: divisor) {
