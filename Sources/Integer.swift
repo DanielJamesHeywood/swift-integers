@@ -1278,3 +1278,13 @@ extension BinaryInteger {
         return remainder != 0 && signum() == other.signum() ? quotient + 1 : quotient
     }
 }
+
+extension BinaryInteger {
+    
+    @inlinable
+    internal func _roundedUp(toMultipleOf other: Self) -> Self {
+        precondition(other != 0)
+        let multipleOfOther = self - self % other
+        return multipleOfOther >= self ? multipleOfOther : multipleOfOther + other
+    }
+}
