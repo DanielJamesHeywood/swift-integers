@@ -837,8 +837,10 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self >> otherTrailingZeroBitCount
             }
-            var dividend = self >> otherTrailingZeroBitCount
-            let divisor = other >> otherTrailingZeroBitCount
+            let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
+            let normalizationExponent = divisorBitWidth - other.bitWidth
+            let dividend = self << normalizationExponent
+            let divisor = other << normalizationExponent
             if let divisor = UInt(exactly: divisor) {
                 return Integer(
                     _words: Array(
