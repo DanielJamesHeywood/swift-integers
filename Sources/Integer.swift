@@ -777,7 +777,7 @@ extension Integer: BinaryInteger {
         guard _compareTrailingZeroBitCount(to: bitWidth - other.bitWidth + otherTrailingZeroBitCount) != .greaterThan else {
             return false
         }
-        return (self >> trailingZeroBitCount) % (other >> otherTrailingZeroBitCount) == 0
+        return (self >> (trailingZeroBitCount - otherTrailingZeroBitCount)) % other == 0
     }
     
     @inlinable
