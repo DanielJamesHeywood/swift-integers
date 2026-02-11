@@ -1238,16 +1238,6 @@ extension FixedWidthInteger {
     }
 }
 
-extension BinaryInteger {
-    
-    @inlinable
-    internal func _roundedUp(toMultipleOf other: Self) -> Self {
-        precondition(other != 0)
-        let multipleOfOther = self - self % other
-        return multipleOfOther >= self ? multipleOfOther : multipleOfOther + other
-    }
-}
-
 extension Collection {
     
     @inlinable
@@ -1280,6 +1270,13 @@ extension Comparable {
 }
 
 extension BinaryInteger {
+    
+    @inlinable
+    internal func _roundedUp(toMultipleOf other: Self) -> Self {
+        precondition(other != 0)
+        let multipleOfOther = self - self % other
+        return multipleOfOther >= self ? multipleOfOther : multipleOfOther + other
+    }
     
     @inlinable
     internal func _dividedRoundingUp(by other: Self) -> Self {
