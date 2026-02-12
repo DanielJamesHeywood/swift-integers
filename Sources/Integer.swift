@@ -933,7 +933,10 @@ extension Integer {
                 } while dividend._compareAsUnsigned(to: divisor) != .lessThan
                 remainder = dividend
             }
-            return normalizationExponent >= 0 ? remainder >> normalizationExponent : remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1)
+            guard normalizationExponent >= 0 else {
+                return remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1)
+            }
+            return remainder >> normalizationExponent
         case .equalTo:
             return 0
         }
@@ -1060,7 +1063,10 @@ extension Integer {
                     dividend
                 )
             }
-            return (quotient, normalizationExponent >= 0 ? remainder >> normalizationExponent : remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1))
+            guard normalizationExponent >= 0 else {
+                return (quotient, remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1))
+            }
+            return (quotient, remainder >> normalizationExponent)
         case .equalTo:
             return (1, 0)
         }
