@@ -908,7 +908,7 @@ extension Integer {
             }
             let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
             let normalizationExponent = divisorBitWidth - other.bitWidth
-            let dividend = self << normalizationExponent
+            var dividend = self << normalizationExponent
             let divisor = other << normalizationExponent
             let remainder: Integer
             if let divisor = UInt(exactly: divisor) {
@@ -918,7 +918,20 @@ extension Integer {
                 }
                 remainder = Integer(currentRemainder)
             } else {
-                fatalError()
+                let lastUnsignedDivisorWord = divisor._words.dropLast().last.unsafelyUnwrapped
+                repeat {
+                    let lastDividendWord = dividend._words.last.unsafelyUnwrapped
+                    let penultimateDividendWord = dividend._words.dropLast().last.unsafelyUnwrapped
+                    let currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
+                        (lastDividendWord, penultimateDividendWord)
+                    ).quotient
+                    let divisorForIndex = divisor << ((dividend._words.count - divisor._words.count) * UInt.bitWidth)
+                    dividend -= Integer(currentQuotient) * divisorForIndex
+                    while dividend._isNegative {
+                        dividend += divisorForIndex
+                    }
+                } while dividend._compareAsUnsigned(to: divisor) != .lessThan
+                remainder = dividend
             }
             return remainder >> normalizationExponent | self & (1 >> normalizationExponent - 1)
         case .equalTo:
