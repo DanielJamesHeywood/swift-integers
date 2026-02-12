@@ -934,7 +934,7 @@ extension Integer {
                 remainder = dividend
             }
             guard normalizationExponent >= 0 else {
-                return remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1)
+                return remainder << -normalizationExponent | self & (1 << -normalizationExponent - 1)
             }
             return remainder >> normalizationExponent
         case .equalTo:
@@ -1064,7 +1064,7 @@ extension Integer {
                 )
             }
             guard normalizationExponent >= 0 else {
-                return (quotient, remainder >> normalizationExponent | self & (1 << -normalizationExponent - 1))
+                return (quotient, remainder << -normalizationExponent | self & (1 << -normalizationExponent - 1))
             }
             return (quotient, remainder >> normalizationExponent)
         case .equalTo:
