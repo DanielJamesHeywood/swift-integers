@@ -872,11 +872,11 @@ extension Integer {
                                 var currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
                                     (lastDividendWord, penultimateDividendWord)
                                 ).quotient
-                                let divisorForIndex = divisor << (index * UInt.bitWidth)
-                                dividend -= Integer(currentQuotient) * divisorForIndex
+                                let divisorForCurrentQuotient = divisor << (index * UInt.bitWidth)
+                                dividend -= Integer(currentQuotient) * divisorForCurrentQuotient
                                 while dividend._isNegative {
                                     currentQuotient -= 1
-                                    dividend += divisorForIndex
+                                    dividend += divisorForCurrentQuotient
                                 }
                                 buffer.initializeElement(at: index, to: currentQuotient)
                             }
@@ -925,10 +925,10 @@ extension Integer {
                     let currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
                         (lastDividendWord, penultimateDividendWord)
                     ).quotient
-                    let divisorForIndex = divisor << ((dividend._words.count - divisor._words.count) * UInt.bitWidth)
-                    dividend -= Integer(currentQuotient) * divisorForIndex
+                    let divisorForCurrentQuotient = divisor << ((dividend._words.count - divisor._words.count) * UInt.bitWidth)
+                    dividend -= Integer(currentQuotient) * divisorForCurrentQuotient
                     while dividend._isNegative {
-                        dividend += divisorForIndex
+                        dividend += divisorForCurrentQuotient
                     }
                 } while dividend._compareAsUnsigned(to: divisor) != .lessThan
                 remainder = dividend
@@ -1045,11 +1045,11 @@ extension Integer {
                                     var currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
                                         (lastDividendWord, penultimateDividendWord)
                                     ).quotient
-                                    let divisorForIndex = divisor << (index * UInt.bitWidth)
-                                    dividend -= Integer(currentQuotient) * divisorForIndex
+                                    let divisorForCurrentQuotient = divisor << (index * UInt.bitWidth)
+                                    dividend -= Integer(currentQuotient) * divisorForCurrentQuotient
                                     while dividend._isNegative {
                                         currentQuotient -= 1
-                                        dividend += divisorForIndex
+                                        dividend += divisorForCurrentQuotient
                                     }
                                     buffer.initializeElement(at: index, to: currentQuotient)
                                 }
