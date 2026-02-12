@@ -880,8 +880,10 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return self & (other - 1)
             }
-            var dividend = self >> otherTrailingZeroBitCount
-            let divisor = other >> otherTrailingZeroBitCount
+            let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
+            let normalizationExponent = divisorBitWidth - other.bitWidth
+            let dividend = self << normalizationExponent
+            let divisor = other << normalizationExponent
             let remainder: Integer
             if let divisor = UInt(exactly: divisor) {
                 var currentRemainder = 0 as UInt
@@ -892,7 +894,7 @@ extension Integer {
             } else {
                 fatalError()
             }
-            return remainder << otherTrailingZeroBitCount | (self & (other - 1))
+            return remainder >> normalizationExponent | self & (1 >> normalizationExponent - 1)
         case .equalTo:
             return 0
         }
@@ -964,8 +966,10 @@ extension Integer {
             guard otherTrailingZeroBitCount + 2 != other.bitWidth else {
                 return (self >> otherTrailingZeroBitCount, self & (other - 1))
             }
-            var dividend = self >> otherTrailingZeroBitCount
-            let divisor = other >> otherTrailingZeroBitCount
+            let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
+            let normalizationExponent = divisorBitWidth - other.bitWidth
+            let dividend = self << normalizationExponent
+            let divisor = other << normalizationExponent
             let (quotient, remainder): (Integer, Integer)
             if let divisor = UInt(exactly: divisor) {
                 var currentRemainder = 0 as UInt
@@ -988,7 +992,7 @@ extension Integer {
             } else {
                 fatalError()
             }
-            return (quotient, remainder << otherTrailingZeroBitCount | (self & (other - 1)))
+            return (quotient, remainder >> normalizationExponent | self & (1 >> normalizationExponent - 1))
         case .equalTo:
             return (1, 0)
         }
