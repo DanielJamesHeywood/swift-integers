@@ -839,7 +839,7 @@ extension Integer {
             }
             let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
             let normalizationExponent = divisorBitWidth - other.bitWidth
-            let dividend = self << normalizationExponent
+            var dividend = self << normalizationExponent
             let divisor = other << normalizationExponent
             if let divisor = UInt(exactly: divisor) {
                 return Integer(
@@ -857,7 +857,33 @@ extension Integer {
                     )
                 )
             } else {
-                fatalError()
+                return Integer(
+                    _words: Array(
+                        unsafeUninitializedCapacity: dividend._words.count - divisor._words.count + 1,
+                        initializingWith: { buffer, initializedCount in
+                            let lastUnsignedDivisorWord = divisor._words.dropLast().last.unsafelyUnwrapped
+                            for index in buffer.indices.reversed() {
+                                guard dividend._words.count == divisor._words.count + index else {
+                                    buffer.initializeElement(at: index, to: 0)
+                                    continue
+                                }
+                                let lastDividendWord = dividend._words.last.unsafelyUnwrapped
+                                let penultimateDividendWord = dividend._words.dropLast().last.unsafelyUnwrapped
+                                var currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
+                                    (lastDividendWord, penultimateDividendWord)
+                                ).quotient
+                                let divisorForIndex = divisor << (index * UInt.bitWidth)
+                                dividend -= Integer(currentQuotient) * divisorForIndex
+                                while dividend._isNegative {
+                                    currentQuotient -= 1
+                                    dividend += divisorForIndex
+                                }
+                                buffer.initializeElement(at: index, to: currentQuotient)
+                            }
+                            initializedCount = buffer.count
+                        }
+                    )
+                )
             }
         case .equalTo:
             return 1
@@ -968,7 +994,7 @@ extension Integer {
             }
             let divisorBitWidth = (other.bitWidth - otherTrailingZeroBitCount - 1)._roundedUp(toMultipleOf: UInt.bitWidth) + 1
             let normalizationExponent = divisorBitWidth - other.bitWidth
-            let dividend = self << normalizationExponent
+            var dividend = self << normalizationExponent
             let divisor = other << normalizationExponent
             let (quotient, remainder): (Integer, Integer)
             if let divisor = UInt(exactly: divisor) {
@@ -990,7 +1016,36 @@ extension Integer {
                     Integer(currentRemainder)
                 )
             } else {
-                fatalError()
+                (quotient, remainder) = (
+                    Integer(
+                        _words: Array(
+                            unsafeUninitializedCapacity: dividend._words.count - divisor._words.count + 1,
+                            initializingWith: { buffer, initializedCount in
+                                let lastUnsignedDivisorWord = divisor._words.dropLast().last.unsafelyUnwrapped
+                                for index in buffer.indices.reversed() {
+                                    guard dividend._words.count == divisor._words.count + index else {
+                                        buffer.initializeElement(at: index, to: 0)
+                                        continue
+                                    }
+                                    let lastDividendWord = dividend._words.last.unsafelyUnwrapped
+                                    let penultimateDividendWord = dividend._words.dropLast().last.unsafelyUnwrapped
+                                    var currentQuotient = lastUnsignedDivisorWord.dividingFullWidth(
+                                        (lastDividendWord, penultimateDividendWord)
+                                    ).quotient
+                                    let divisorForIndex = divisor << (index * UInt.bitWidth)
+                                    dividend -= Integer(currentQuotient) * divisorForIndex
+                                    while dividend._isNegative {
+                                        currentQuotient -= 1
+                                        dividend += divisorForIndex
+                                    }
+                                    buffer.initializeElement(at: index, to: currentQuotient)
+                                }
+                                initializedCount = buffer.count
+                            }
+                        )
+                    ),
+                    dividend
+                )
             }
             return (quotient, remainder >> normalizationExponent | self & (1 >> normalizationExponent - 1))
         case .equalTo:
